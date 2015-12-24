@@ -1,6 +1,7 @@
-package com.example.wordpassword.com.example.wordpassword.util;
+package com.example.wordpassword.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by apurv on 12/23/2015.
@@ -17,6 +18,57 @@ public class WordModel {
     private String serealized_synonyms;
     private String serealized_antonyms;;
     private String serealized_similiars;;
+
+    private HashMap<String, ArrayList<String>> synonyms = null;
+    private HashMap<String, ArrayList<String>> antonyms = null;
+    private HashMap<String, ArrayList<String>> similar = null;
+
+    public void addSynonyms(String key, String word){
+        if(synonyms == null)
+            synonyms = new HashMap<>();
+        if(synonyms.get(key) != null)
+            synonyms.get(key).add(word);
+        else {
+            ArrayList<String> arr = new ArrayList<String>();
+            arr.add(word);
+            synonyms.put(key,arr);
+        }
+
+    }
+
+    public String[] getWordList(String type, String word){
+        String[] arr = {};
+        if(synonyms != null) {
+            arr = synonyms.get(word).toArray(new String[0]);
+            return arr;
+        }
+        else
+            return arr;
+    }
+
+    public void addAntonyms(String key, String word){
+        if(antonyms == null)
+            antonyms = new HashMap<>();
+        if(antonyms.get(key) != null)
+            antonyms.get(key).add(word);
+        else {
+            ArrayList<String> arr = new ArrayList<String>();
+            arr.add(word);
+            antonyms.put(key,arr);
+        }
+    }
+
+    public void addSimilar(String key, String word){
+        if(similar == null)
+            similar = new HashMap<>();
+        if(similar.get(key) != null)
+            similar.get(key).add(word);
+        else {
+            ArrayList<String> arr = new ArrayList<String>();
+            arr.add(word);
+            similar.put(key,arr);
+        }
+    }
 
     public String getSerealizedSynonyms() {
         return serealized_synonyms;

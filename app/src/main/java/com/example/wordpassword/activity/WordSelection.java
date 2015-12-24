@@ -1,5 +1,6 @@
 package com.example.wordpassword.activity;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -8,15 +9,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.wordpassword.R;
-import com.example.wordpassword.com.example.wordpassword.util.Constants;
-import com.example.wordpassword.com.example.wordpassword.util.WordModel;
+import com.example.wordpassword.util.Constants;
+import com.example.wordpassword.util.WordModel;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,11 +33,22 @@ import java.util.ArrayList;
 public class WordSelection extends AppCompatActivity {
 
     private final String TAG = "WordSelection";
+    WordModel wm;
+    ListView listView;
+    ArrayAdapter<String> adapter;
+    Context mContext;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_selection);
+
+        mContext = this;
+
+        TextView tv = (TextView)findViewById(R.id.textView);
+        listView = (ListView) findViewById(R.id.list);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -50,15 +62,23 @@ public class WordSelection extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        WordModel wm = new WordModel();
+        wm = new WordModel();
         //get the list of words
         Bundle extra = getIntent().getBundleExtra("extra");
         ArrayList<String> wordList = (ArrayList<String>) extra.getSerializable("wordArrayList");
 
+
         //async task which gets list of synonyms, antonyms, similar words and updates the object
         new WordAPITask().execute("kill");
+        tv.setText("kill");
 
-        //build the Word Model Object
+
+        String[] words = wm.getWordList("synonyms", "kill");
+        adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_multiple_choice, words);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        listView.setAdapter(adapter);
+
     }
 
     class WordAPITask extends AsyncTask<String, Void, Boolean> {
@@ -75,16 +95,121 @@ public class WordSelection extends AppCompatActivity {
             try {
 
                 String data = GET(Constants.WORD_API+word[0]+"/json");
-                Log.d(TAG, data);
-                JSONObject jsono = new JSONObject(data);
+                Log.d(TAG, (data!=null?"Success":"Failure"));
+                createWordModel(word[0], data);
                 return true;
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return false;
         }
 
+        private void createWordModel(String key, String data) {
+
+            try {
+                JSONObject obj = new JSONObject(data);
+
+                if(obj.has("adjective")){
+                    JSONObject json_o = (JSONObject) obj.get("adjective");
+
+                    if(json_o.has("syn")){
+                        JSONArray arr = new JSONArray(json_o.get("syn").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSynonyms(key, arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("ant")){
+                        JSONArray arr = new JSONArray(json_o.get("ant").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addAntonyms(key , arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("sim")){
+                        JSONArray arr = new JSONArray(json_o.get("sim").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key, arr.get(i).toString());
+                        }
+                    }
+
+                    if(json_o.has("rel")){
+                        JSONArray arr = new JSONArray(json_o.get("rel").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key ,arr.get(i).toString());
+                        }
+                    }
+                }
+
+                if(obj.has("verb")){
+                    JSONObject json_o = (JSONObject) obj.get("verb");
+
+                    if(json_o.has("syn")){
+                        JSONArray arr = new JSONArray(json_o.get("syn").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSynonyms(key, arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("ant")){
+                        JSONArray arr = new JSONArray(json_o.get("ant").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addAntonyms(key, arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("sim")){
+                        JSONArray arr = new JSONArray(json_o.get("sim").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key, arr.get(i).toString());
+                        }
+                    }
+
+                    if(json_o.has("rel")){
+                        JSONArray arr = new JSONArray(json_o.get("rel").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key, arr.get(i).toString());
+                        }
+                    }
+                }
+                if(obj.has("noun")){
+                    JSONObject json_o = (JSONObject) obj.get("verb");
+
+                    if(json_o.has("syn")){
+                        JSONArray arr = new JSONArray(json_o.get("syn").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSynonyms(key, arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("ant")){
+                        JSONArray arr = new JSONArray(json_o.get("ant").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addAntonyms(key, arr.get(i).toString());
+                        }
+                    }
+                    if(json_o.has("sim")){
+                        JSONArray arr = new JSONArray(json_o.get("sim").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key, arr.get(i).toString());
+                        }
+                    }
+
+                    if(json_o.has("rel")){
+                        JSONArray arr = new JSONArray(json_o.get("rel").toString());
+                        for(int i = 0 ; i < arr.length(); i++ ){
+                            wm.addSimilar(key, arr.get(i).toString());
+                        }
+                    }
+                }
+
+            } catch (JSONException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+
         protected void onPostExecute(Boolean result) {
+            String[] words = wm.getWordList("synonyms", "kill");
+            adapter = new ArrayAdapter<String>(mContext,
+                    android.R.layout.simple_list_item_multiple_choice, words);
+            listView.setAdapter(adapter);
 
         }
 

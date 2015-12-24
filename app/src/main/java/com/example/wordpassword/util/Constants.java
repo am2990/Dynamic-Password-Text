@@ -1,4 +1,4 @@
-package com.example.wordpassword.com.example.wordpassword.util;
+package com.example.wordpassword.util;
 
 /**
  * Created by apurv on 12/23/2015.

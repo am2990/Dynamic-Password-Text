@@ -11,7 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.example.wordpassword.R;
-import com.example.wordpassword.com.example.wordpassword.util.Constants;
+import com.example.wordpassword.util.Constants;
 
 public class TypeSelectionActivity extends AppCompatActivity {
 
