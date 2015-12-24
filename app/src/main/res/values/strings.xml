@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WordPassword</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_type_selection">Selection Password Type</string>
+
+    <!--Password Type Selection Activity-->
+    <string name="syn">Synonyms</string>
+    <string name="ant">Antonyms</string>
+    <string name="sim">Similar Words</string>
+    <string name="Next">Next</string>
+    <string name="title_activity_word_selection">Select Words</string>
+
+</resources>
