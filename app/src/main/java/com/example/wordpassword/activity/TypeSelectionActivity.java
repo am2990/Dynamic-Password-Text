@@ -13,10 +13,12 @@ import android.widget.RadioGroup;
 import com.example.wordpassword.R;
 import com.example.wordpassword.util.Constants;
 
+import java.util.ArrayList;
+
 public class TypeSelectionActivity extends AppCompatActivity {
 
     private int passwordType = 0;
-
+    Bundle extra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,10 @@ public class TypeSelectionActivity extends AppCompatActivity {
         //by default set antonyms options checked
         RadioGroup r = (RadioGroup)findViewById(R.id.radio_select);
         r.check(R.id.radio_ant);
+        passwordType = Constants.ANTONYMS;
+        extra = getIntent().getBundleExtra("extra");
+        ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
+        extra.putSerializable("wordArrayList", objects);
 
     }
 
@@ -66,8 +72,6 @@ public class TypeSelectionActivity extends AppCompatActivity {
     }
 
     public void nextActivity(View view) {
-
-        Bundle extra = getIntent().getBundleExtra("extra");
         extra.putInt(Constants.PASSWORD_TYPE, passwordType);
         Intent intent = new Intent(getBaseContext(), WordSelection.class);
         intent.putExtra("extra", extra);

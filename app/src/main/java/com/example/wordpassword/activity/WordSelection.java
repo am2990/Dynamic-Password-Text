@@ -8,7 +8,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,10 +35,12 @@ import java.util.ArrayList;
 public class WordSelection extends AppCompatActivity {
 
     private final String TAG = "WordSelection";
-    WordModel wm;
+    private static WordModel wm;
     ListView listView;
     ArrayAdapter<String> adapter;
     Context mContext;
+    int type = 0;
+    String[] words;
 
 
     @Override
@@ -46,7 +50,7 @@ public class WordSelection extends AppCompatActivity {
 
         mContext = this;
 
-        TextView tv = (TextView)findViewById(R.id.textView);
+        TextView tv = (TextView) findViewById(R.id.textView);
         listView = (ListView) findViewById(R.id.list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -66,23 +70,32 @@ public class WordSelection extends AppCompatActivity {
         //get the list of words
         Bundle extra = getIntent().getBundleExtra("extra");
         ArrayList<String> wordList = (ArrayList<String>) extra.getSerializable("wordArrayList");
-
+        type = extra.getInt(Constants.PASSWORD_TYPE);
 
         //async task which gets list of synonyms, antonyms, similar words and updates the object
-        new WordAPITask().execute("kill");
-        tv.setText("kill");
+        new WordAPITask().execute(wordList.get(0));
+        tv.setText(wordList.get(0));
 
 
-        String[] words = wm.getWordList("synonyms", "kill");
+        String[] words = wm.getWordList(type, wordList.get(0));
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_multiple_choice, words);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
+            public void onItemClick(AdapterView<?> arg0, View view, final int position,
+                                    long id) {
+                final View selectedView = view; // Save selected view in final variable**
+                Object listItem = listView.getItemAtPosition(position);
+                Log.d(TAG, listItem.toString() +"ddd");
+            }
+        });
     }
 
     class WordAPITask extends AsyncTask<String, Void, Boolean> {
 
+        String curr_word;
 
         @Override
         protected void onPreExecute() {
@@ -93,7 +106,7 @@ public class WordSelection extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... word) {
             try {
-
+                curr_word = word[0];
                 String data = GET(Constants.WORD_API+word[0]+"/json");
                 Log.d(TAG, (data!=null?"Success":"Failure"));
                 createWordModel(word[0], data);
@@ -121,7 +134,7 @@ public class WordSelection extends AppCompatActivity {
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addAntonyms(key , arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
                         }
                     }
                     if(json_o.has("sim")){
@@ -131,7 +144,7 @@ public class WordSelection extends AppCompatActivity {
                         }
                     }
 
-                    if(json_o.has("rel")){
+                    if(json_o.has("rel")) {
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addSimilar(key ,arr.get(i).toString());
@@ -151,7 +164,7 @@ public class WordSelection extends AppCompatActivity {
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addAntonyms(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
                         }
                     }
                     if(json_o.has("sim")){
@@ -164,7 +177,7 @@ public class WordSelection extends AppCompatActivity {
                     if(json_o.has("rel")){
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addSimilar(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
                         }
                     }
                 }
@@ -174,26 +187,26 @@ public class WordSelection extends AppCompatActivity {
                     if(json_o.has("syn")){
                         JSONArray arr = new JSONArray(json_o.get("syn").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addSynonyms(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.SYNONYMS);
                         }
                     }
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addAntonyms(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
                         }
                     }
                     if(json_o.has("sim")){
                         JSONArray arr = new JSONArray(json_o.get("sim").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addSimilar(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
                         }
                     }
 
                     if(json_o.has("rel")){
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addSimilar(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
                         }
                     }
                 }
@@ -206,7 +219,7 @@ public class WordSelection extends AppCompatActivity {
         }
 
         protected void onPostExecute(Boolean result) {
-            String[] words = wm.getWordList("synonyms", "kill");
+            words = wm.getWordList(type, curr_word);
             adapter = new ArrayAdapter<String>(mContext,
                     android.R.layout.simple_list_item_multiple_choice, words);
             listView.setAdapter(adapter);
@@ -217,20 +230,28 @@ public class WordSelection extends AppCompatActivity {
 
             HttpURLConnection urlConnection = null;
             String result = "";
-            try {
-                URL url = new URL(urls);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                if (in != null)
-                    result = convertInputStreamToString(in);
-                else
-                    result = "Did not work!";
+//            try {
+//                URL url = new URL(urls);
+//                urlConnection = (HttpURLConnection) url.openConnection();
+//                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+//                if (in != null)
+//                    result = convertInputStreamToString(in);
+//                else
+//                    result = "Did not work!";
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                urlConnection.disconnect();
+//            }
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                urlConnection.disconnect();
-            }
+            if(urls.contains("kill"))
+                result = "{\"noun\":{\"syn\":[\"killing\",\"putting to death\",\"conclusion\",\"destruction\",\"devastation\",\"ending\",\"termination\"]},\"verb\":{\"syn\":[\"shoot down\",\"defeat\",\"vote down\",\"vote out\",\"stamp out\",\"toss off\",\"pop\",\"bolt down\",\"belt down\",\"pour down\",\"down\",\"drink down\",\"obliterate\",\"wipe out\",\"ache\",\"be\",\"beat\",\"blackball\",\"cut\",\"destroy\",\"destruct\",\"drink\",\"end\",\"exhaust\",\"hit\",\"hurt\",\"imbibe\",\"negative\",\"overcome\",\"overpower\",\"overtake\",\"overwhelm\",\"suffer\",\"sweep over\",\"switch off\",\"take away\",\"take out\",\"terminate\",\"tucker\",\"tucker out\",\"turn off\",\"turn out\",\"veto\",\"wash up\",\"whelm\"],\"rel\":[\"kill off\"]}}\n";
+            else if(urls.contains("dry"))
+                result = "{\"adjective\":{\"syn\":[\"ironic\",\"ironical\",\"wry\",\"juiceless\",\"teetotal\"],\"ant\":[\"phlegmy\",\"sweet\",\"wet\"],\"rel\":[\"nonsweet\",\"sour\",\"sugarless\"],\"sim\":[\"adust\",\"air-dried\",\"air-dry\",\"alcoholic\",\"arid\",\"baked\",\"bone dry\",\"bone-dry\",\"brut\",\"desiccated\",\"dried\",\"dried-out\",\"dried-up\",\"dry-eyed\",\"dry-shod\",\"humorous\",\"humourous\",\"kiln-dried\",\"medium-dry\",\"milkless\",\"parched\",\"plain\",\"rainless\",\"scorched\",\"sear\",\"sec\",\"semi-dry\",\"semiarid\",\"sere\",\"shriveled\",\"shrivelled\",\"sober\",\"solid\",\"sunbaked\",\"tearless\",\"thirsty\",\"unemotional\",\"unexciting\",\"unproductive\",\"unstimulating\",\"unsweet\",\"waterless\",\"withered\"]},\"noun\":{\"syn\":[\"prohibitionist\",\"crusader\",\"meliorist\",\"reformer\",\"reformist\",\"social reformer\"]},\"verb\":{\"syn\":[\"dry out\",\"alter\",\"change\",\"modify\"],\"ant\":[\"wet\"]}}";
+            else if(urls.contains("heaven"))
+                result = "{\"noun\":{\"syn\":[\"Eden\",\"paradise\",\"Nirvana\",\"promised land\",\"Shangri-la\",\"Heaven\",\"fictitious place\",\"imaginary place\",\"mythical place\",\"part\",\"region\"],\"ant\":[\"Hell\"]}}\n";
+
             return result;
         }
 
@@ -246,6 +267,22 @@ public class WordSelection extends AppCompatActivity {
 
         }
 
+    }
+
+    public void nextAction(View view){
+
+        // get the current word
+        int len = listView.getCount();
+        SparseBooleanArray checked = listView.getCheckedItemPositions();
+        for (int i = 0; i < len; i++)
+            if (checked.get(i)) {
+                String item = words[i];
+                /* do whatever you want with the checked item */
+                Log.d(TAG, "dasn" + item);
+            }
+        // pick next word from word list
+
+        // call the async task with next word if word list empty then send to next activity
     }
 
 }

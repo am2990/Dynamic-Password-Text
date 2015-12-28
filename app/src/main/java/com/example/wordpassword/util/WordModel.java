@@ -1,5 +1,7 @@
 package com.example.wordpassword.util;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -7,6 +9,8 @@ import java.util.HashMap;
  * Created by apurv on 12/23/2015.
  */
 public class WordModel {
+
+    private final String TAG = this.getClass().getCanonicalName();
 
     private int _id;
 
@@ -36,10 +40,56 @@ public class WordModel {
 
     }
 
-    public String[] getWordList(String type, String word){
+    public void addWord(String key, String word, int type){
+        HashMap<String, ArrayList<String>> hm = null;
+        // somehow get a deep copy of the array list objects. how should this be implemented ?
+        switch (type){
+            case Constants.ANTONYMS:
+                if(antonyms == null) {
+                    antonyms = new HashMap<>();
+                    Log.d(TAG, "Antonyms Null");
+                }
+                hm = antonyms;
+                Log.d(TAG, "Assigned Antonyms with size" + antonyms.size());
+                break;
+            case Constants.SYNONYMS:
+                hm = synonyms;
+                break;
+            case Constants.SIMILAR:
+                hm = similar;
+                break;
+        }
+
+        if(hm.get(key) == null ){
+            ArrayList<String> arr = new ArrayList<String>();
+            arr.add(word);
+            hm.put(key, arr);
+            Log.d(TAG, key+ " Key does not exist adding word "+ word +":"+ antonyms.get(key).size());
+        }else if(hm.get(key) != null && !(hm.get(key).contains(word))){
+            hm.get(key).add(word);
+            Log.d(TAG, key+ " Key exists adding word "+ word +":"+ antonyms.get(key).size());
+        }
+
+    }
+
+    public String[] getWordList(int type, String word){
         String[] arr = {};
-        if(synonyms != null) {
-            arr = synonyms.get(word).toArray(new String[0]);
+        HashMap<String, ArrayList<String>> hm = null;
+        switch (type){
+            case Constants.ANTONYMS:
+                hm = this.antonyms;
+                break;
+            case Constants.SYNONYMS:
+                hm = this.synonyms;
+                break;
+            case Constants.SIMILAR:
+                hm = this.similar;
+                break;
+        }
+
+
+        if(hm != null) {
+            arr = hm.get(word).toArray(new String[0]);
             return arr;
         }
         else
@@ -49,7 +99,7 @@ public class WordModel {
     public void addAntonyms(String key, String word){
         if(antonyms == null)
             antonyms = new HashMap<>();
-        if(antonyms.get(key) != null)
+        if(antonyms.get(key) != null  &&  !(antonyms.get(key).contains(word)))
             antonyms.get(key).add(word);
         else {
             ArrayList<String> arr = new ArrayList<String>();
