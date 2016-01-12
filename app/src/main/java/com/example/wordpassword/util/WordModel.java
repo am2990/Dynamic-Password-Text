@@ -16,6 +16,7 @@ public class WordModel {
 
     private String original_sentence;
     private String trimmed_sentence;
+    private String word;
 
     private int passwordSelection;
 
@@ -26,6 +27,26 @@ public class WordModel {
     private HashMap<String, ArrayList<String>> synonyms = null;
     private HashMap<String, ArrayList<String>> antonyms = null;
     private HashMap<String, ArrayList<String>> similar = null;
+
+
+    public WordModel(String word){
+        this.word = word;
+        synonyms = new HashMap<>();
+        ArrayList<String> arr_sy = new ArrayList<String>();
+        arr_sy.add(word);
+        synonyms.put(word,arr_sy);
+
+        antonyms = new HashMap<>();
+        ArrayList<String> arr_an = new ArrayList<String>();
+        arr_an.add(word);
+        antonyms.put(word,arr_an);
+
+        similar = new HashMap<>();
+        ArrayList<String> arr_si = new ArrayList<String>();
+        arr_si.add(word);
+        similar.put(word,arr_si);
+
+    }
 
     public void addSynonyms(String key, String word){
         if(synonyms == null)

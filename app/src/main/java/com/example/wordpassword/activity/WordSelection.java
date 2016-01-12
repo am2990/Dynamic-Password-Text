@@ -12,6 +12,7 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WordSelection extends AppCompatActivity {
 
@@ -40,10 +42,15 @@ public class WordSelection extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     Context mContext;
 
+    View headerView;
+    TextView titleView;
+
     int type = 0;
     String[] words;
+    String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
     private static int counter = 0;
     ArrayList<String> selectedWords, notSelectedWords, wordList;
+    HashMap<String, WordModel> word_hm = new HashMap<>();
 
 
     @Override
@@ -69,22 +76,25 @@ public class WordSelection extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        wm = new WordModel();
-        selectedWords = new ArrayList<>();
-        notSelectedWords = new ArrayList<>();
+
         //get the list of words
         Bundle extra = getIntent().getBundleExtra("extra");
         wordList = (ArrayList<String>) extra.getSerializable("wordArrayList");
         type = extra.getInt(Constants.PASSWORD_TYPE);
 
+        String word = wordList.get(counter);
+        wm = new WordModel(word);
+        word_hm.put(word, wm);
+        selectedWords = new ArrayList<>();
+        notSelectedWords = new ArrayList<>();
+
         //async task which gets list of synonyms, antonyms, similar words and updates the object
         new WordAPITask().execute(wordList.get(counter));
-        View headerView = getLayoutInflater().inflate(R.layout.listview_title, null);
-        TextView titleView = (TextView) headerView.findViewById(R.id.repaymentScreenTitle);
-        String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
-        titleView.setText(titlePrefix + " " + wordList.get(counter));
+        headerView = getLayoutInflater().inflate(R.layout.listview_title, null);
+        titleView = (TextView) headerView.findViewById(R.id.repaymentScreenTitle);
+        titlePrefix = "Select Synonyms/Antonyms/Similar Words"; //TODO update title prefix
+        titleView.setText(titlePrefix + " - " + wordList.get(counter).toUpperCase());
         listView.addHeaderView(headerView);
-//        tv.setText(wordList.get(counter));
         counter++;
 
 //        String[] words = wm.getWordList(type, wordList.get(0));
@@ -92,8 +102,6 @@ public class WordSelection extends AppCompatActivity {
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_multiple_choice, words);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-//        listView.addHeaderView(tv);
-//        listView.setHeaderDividersEnabled(true);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -141,19 +149,22 @@ public class WordSelection extends AppCompatActivity {
                     if(json_o.has("syn")){
                         JSONArray arr = new JSONArray(json_o.get("syn").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
-                            wm.addSynonyms(key, arr.get(i).toString());
+                            wm.addWord(key, arr.get(i).toString(), Constants.SYNONYMS);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("sim")){
                         JSONArray arr = new JSONArray(json_o.get("sim").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addSimilar(key, arr.get(i).toString());
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
 
@@ -161,6 +172,7 @@ public class WordSelection extends AppCompatActivity {
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addSimilar(key ,arr.get(i).toString());
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                 }
@@ -172,18 +184,21 @@ public class WordSelection extends AppCompatActivity {
                         JSONArray arr = new JSONArray(json_o.get("syn").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addSynonyms(key, arr.get(i).toString());
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("sim")){
                         JSONArray arr = new JSONArray(json_o.get("sim").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addSimilar(key, arr.get(i).toString());
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
 
@@ -191,28 +206,32 @@ public class WordSelection extends AppCompatActivity {
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                 }
                 if(obj.has("noun")){
-                    JSONObject json_o = (JSONObject) obj.get("verb");
+                    JSONObject json_o = (JSONObject) obj.get("noun");
 
                     if(json_o.has("syn")){
                         JSONArray arr = new JSONArray(json_o.get("syn").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.SYNONYMS);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("ant")){
                         JSONArray arr = new JSONArray(json_o.get("ant").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.ANTONYMS);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                     if(json_o.has("sim")){
                         JSONArray arr = new JSONArray(json_o.get("sim").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
 
@@ -220,12 +239,23 @@ public class WordSelection extends AppCompatActivity {
                         JSONArray arr = new JSONArray(json_o.get("rel").toString());
                         for(int i = 0 ; i < arr.length(); i++ ){
                             wm.addWord(key, arr.get(i).toString(), Constants.SIMILAR);
+                            notSelectedWords.add(arr.get(i).toString());
                         }
                     }
                 }
 
+                //print the entire hashmap of the word
+                Log.d(TAG, "Word:" + curr_word);
+                Log.d(TAG, "HM:AN" + wm.getWordList(1, curr_word) +" size" + wm.getWordList(1, curr_word).length);
+                Log.d(TAG, "HM:SY" + wm.getWordList(2, curr_word)+" size" + wm.getWordList(2, curr_word).length);
+                Log.d(TAG, "HM:SI" + wm.getWordList(3, curr_word) + " size" + wm.getWordList(3, curr_word).length);
+
+
             } catch (JSONException e) {
-                // TODO Auto-generated catch block
+                Log.d(TAG, "Word:" + curr_word);
+                Log.d(TAG, "HM:AN" + wm.getWordList(1, curr_word) +" size" + wm.getWordList(1, curr_word).length);
+                Log.d(TAG, "HM:SY" + wm.getWordList(2, curr_word)+" size" + wm.getWordList(2, curr_word).length);
+                Log.d(TAG, "HM:SI" + wm.getWordList(3, curr_word) + " size" + wm.getWordList(3, curr_word).length);
                 e.printStackTrace();
             }
 
@@ -235,7 +265,11 @@ public class WordSelection extends AppCompatActivity {
             words = wm.getWordList(type, curr_word);
             adapter = new ArrayAdapter<String>(mContext,
                     android.R.layout.simple_list_item_multiple_choice, words);
+
             listView.setAdapter(adapter);
+            //TODO by default set the word itself as selected
+            listView.setItemChecked(0,true);
+            word_hm.put(curr_word, wm);
 
         }
 
@@ -285,7 +319,8 @@ public class WordSelection extends AppCompatActivity {
     public void nextAction(View view){
 
         // get the current word
-        int len = listView.getCount();
+        int len = words.length;
+
         SparseBooleanArray checked = listView.getCheckedItemPositions();
 
         for (int i = 0; i < len; i++)
@@ -294,15 +329,28 @@ public class WordSelection extends AppCompatActivity {
                 /* do whatever you want with the checked item */
                 Log.d(TAG, "" + item);
                 selectedWords.add(item);
+                notSelectedWords.remove(item);
             }
+
         // pick next word from word list
         if(counter < wordList.size()) {
-            new WordAPITask().execute(wordList.get(counter));
-//        tv.setText(wordList.get(counter));
+            String word = wordList.get(counter);
+
+            new WordAPITask().execute(word);
+            wm = new WordModel(word);
+
+
+
+            titleView.setText(titlePrefix + " - " + word.toUpperCase());
+            listView.addHeaderView(headerView);
+
             counter++;
+
         }
         else{
             Log.d(TAG,"take me to next activity");
+            Log.d(TAG,"selected words-" + selectedWords.size());
+            Log.d(TAG,"Not selected words-" + notSelectedWords.size());
         }
 
         // call the async task with next word if word list empty then send to next activity
