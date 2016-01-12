@@ -64,10 +64,10 @@ public class WordModel {
             ArrayList<String> arr = new ArrayList<String>();
             arr.add(word);
             hm.put(key, arr);
-            Log.d(TAG, key+ " Key does not exist adding word "+ word +":"+ antonyms.get(key).size());
+            Log.d(TAG, key+ " Key does not exist adding word "+ word +":"+ hm.get(key).size());
         }else if(hm.get(key) != null && !(hm.get(key).contains(word))){
             hm.get(key).add(word);
-            Log.d(TAG, key+ " Key exists adding word "+ word +":"+ antonyms.get(key).size());
+            Log.d(TAG, key+ " Key exists adding word "+ word +":"+ hm.get(key).size());
         }
 
     }

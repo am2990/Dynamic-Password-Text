@@ -39,8 +39,11 @@ public class WordSelection extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> adapter;
     Context mContext;
+
     int type = 0;
     String[] words;
+    private static int counter = 0;
+    ArrayList<String> selectedWords, notSelectedWords, wordList;
 
 
     @Override
@@ -50,7 +53,7 @@ public class WordSelection extends AppCompatActivity {
 
         mContext = this;
 
-        TextView tv = (TextView) findViewById(R.id.textView);
+//        TextView tv = (TextView) findViewById(R.id.textView);
         listView = (ListView) findViewById(R.id.list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -67,20 +70,30 @@ public class WordSelection extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         wm = new WordModel();
+        selectedWords = new ArrayList<>();
+        notSelectedWords = new ArrayList<>();
         //get the list of words
         Bundle extra = getIntent().getBundleExtra("extra");
-        ArrayList<String> wordList = (ArrayList<String>) extra.getSerializable("wordArrayList");
+        wordList = (ArrayList<String>) extra.getSerializable("wordArrayList");
         type = extra.getInt(Constants.PASSWORD_TYPE);
 
         //async task which gets list of synonyms, antonyms, similar words and updates the object
-        new WordAPITask().execute(wordList.get(0));
-        tv.setText(wordList.get(0));
+        new WordAPITask().execute(wordList.get(counter));
+        View headerView = getLayoutInflater().inflate(R.layout.listview_title, null);
+        TextView titleView = (TextView) headerView.findViewById(R.id.repaymentScreenTitle);
+        String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
+        titleView.setText(titlePrefix + " " + wordList.get(counter));
+        listView.addHeaderView(headerView);
+//        tv.setText(wordList.get(counter));
+        counter++;
 
-
-        String[] words = wm.getWordList(type, wordList.get(0));
+//        String[] words = wm.getWordList(type, wordList.get(0));
+        String[] words = {};
         adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_multiple_choice, words);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//        listView.addHeaderView(tv);
+//        listView.setHeaderDividersEnabled(true);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -274,13 +287,23 @@ public class WordSelection extends AppCompatActivity {
         // get the current word
         int len = listView.getCount();
         SparseBooleanArray checked = listView.getCheckedItemPositions();
+
         for (int i = 0; i < len; i++)
             if (checked.get(i)) {
                 String item = words[i];
                 /* do whatever you want with the checked item */
-                Log.d(TAG, "dasn" + item);
+                Log.d(TAG, "" + item);
+                selectedWords.add(item);
             }
         // pick next word from word list
+        if(counter < wordList.size()) {
+            new WordAPITask().execute(wordList.get(counter));
+//        tv.setText(wordList.get(counter));
+            counter++;
+        }
+        else{
+            Log.d(TAG,"take me to next activity");
+        }
 
         // call the async task with next word if word list empty then send to next activity
     }
