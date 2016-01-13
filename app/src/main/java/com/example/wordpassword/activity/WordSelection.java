@@ -1,6 +1,7 @@
 package com.example.wordpassword.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.wordpassword.R;
+import com.example.wordpassword.SampleTagCloud;
 import com.example.wordpassword.util.Constants;
 import com.example.wordpassword.util.WordModel;
 
@@ -109,7 +111,9 @@ public class WordSelection extends AppCompatActivity {
                                     long id) {
                 final View selectedView = view; // Save selected view in final variable**
                 Object listItem = listView.getItemAtPosition(position);
-                Log.d(TAG, listItem.toString() +"ddd");
+                Log.d(TAG, listItem.toString() +" -ddd");
+                selectedWords.add(listItem.toString());
+                notSelectedWords.remove(listItem.toString());
             }
         });
     }
@@ -268,8 +272,9 @@ public class WordSelection extends AppCompatActivity {
 
             listView.setAdapter(adapter);
             //TODO by default set the word itself as selected
-            listView.setItemChecked(0,true);
+//            listView.setItemChecked(1,true);
             word_hm.put(curr_word, wm);
+
 
         }
 
@@ -327,9 +332,9 @@ public class WordSelection extends AppCompatActivity {
             if (checked.get(i)) {
                 String item = words[i];
                 /* do whatever you want with the checked item */
-                Log.d(TAG, "" + item);
-                selectedWords.add(item);
-                notSelectedWords.remove(item);
+                Log.d(TAG, "selected" + item);
+//                selectedWords.add(item);
+//                notSelectedWords.remove(item);
             }
 
         // pick next word from word list
@@ -351,6 +356,14 @@ public class WordSelection extends AppCompatActivity {
             Log.d(TAG,"take me to next activity");
             Log.d(TAG,"selected words-" + selectedWords.size());
             Log.d(TAG,"Not selected words-" + notSelectedWords.size());
+
+            Bundle extra = new Bundle();
+            extra.putSerializable("selectedWordArrayList", selectedWords);
+            extra.putSerializable("notSelectedWordArrayList", notSelectedWords);
+            Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
+            intent.putExtra("extra", extra);
+            startActivity(intent);
+
         }
 
         // call the async task with next word if word list empty then send to next activity
