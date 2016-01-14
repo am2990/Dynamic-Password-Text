@@ -35,13 +35,14 @@ public class TagCloudView extends RelativeLayout {
 	Object[] array=new Object[100];
 	boolean flag1=true;
 
-	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects) {
-		this(mContext, width, height, tagList, 6 , 34, 1, objects); //default for min/max text size
-
+	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern) {
+		this(mContext, width, height, tagList, 6 , 34, 1, objects, checkuser, str_usern); //default for min/max text size
+		System.out.println("usernameintag: " + str_usern);
+		System.out.println("checkuserintag: "+ checkuser);
 
 	}
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, 
-			int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects) {
+			int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern) {
 
 
 
@@ -126,6 +127,8 @@ public class TagCloudView extends RelativeLayout {
 
 
 	}
+
+
 
 	@Override
 	protected void onDraw(Canvas canvas){
@@ -553,12 +556,12 @@ public class TagCloudView extends RelativeLayout {
 						//System.out.println("yo yo honey singh"+ myList.toArray());
 						for (Objects s : myList)
 						{
-							System.out.println("yo yo honey"+ hh);
+
 						    hh += s + "\t";
 						}
-						System.out.println("yo yo honey singh"+ hh);
+
 				//}
-				System.out.println("yo yo honey singh"+ hh);*/
+				*/
 				}
 				catch(Exception e){
 					Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();

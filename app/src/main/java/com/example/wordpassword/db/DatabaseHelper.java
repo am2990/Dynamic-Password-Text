@@ -16,6 +16,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.wordpassword.util.User;
+
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -28,14 +30,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "wordpin";
 
     // Table Names
-    private static final String TABLE_NUMPIN = "wordpin_table";
+    private static final String TABLE_WORDPIN = "wordpin_table";
 
 
     private static final String KEY_ID = "_id"; //primary key
     private static final String KEY_CREATED_AT = "created_at";
 
 
-    private static final String KEY_USERNAME = "username";
+
+
     private static final String KEY_SENTENCE = "sentence";
     private static final String KEY_TRIMMED_SENTENCE = "trimmed_sentence";
     private static final String KEY_PASSWORD_TYPE = "password_type";
@@ -44,10 +47,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_SIM_LIST = "sim_list";
 
 
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_PASSWORD = "password";
+    private static final String KEY_WRONGTRY = "wrongtry";
+
+
+
+
+
+
+
     // Table Create Statements
     // t_login table create statement
     private static final String CREATE_TABLE_t_login = "CREATE TABLE "
-            + TABLE_NUMPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + " )";
+            + TABLE_WORDPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_PASSWORD + " VARCHAR," + KEY_WRONGTRY + " INTEGER " + " )";
+
 
 
 
@@ -71,45 +85,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NUMPIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORDPIN);
         // create new tables
         onCreate(db);
     }
-//
-//    public void addUser(User user) {
-//        SQLiteDatabase db = this.getWritableDatabase();
-//
-//        ContentValues values = new ContentValues();
-//        boolean exists = getUserByName(user.getUsername());
-//        if(exists == false) {
-//            values.put(KEY_USERNAME, user.getUsername()); // Contact Name
-//            values.put(KEY_PASSWORD, user.getPassword()); // Contact Phone Number
-//            // Inserting Row
-//            db.insert(TABLE_NUMPIN, null, values);
-//            System.out.println("inserted successfully");
-//        }
-//        db.close(); // Closing database connection
-//    }
-//
-//    public boolean getUserByName(String username) {
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = db.query(TABLE_NUMPIN,
-//                new String[]{KEY_USERNAME},
-//                KEY_USERNAME + " = ? ",
-//                new String[]{username},
-//                null, null, null, null);
-//
-//        if(cursor.moveToFirst()) {
-//            System.out.println("cursor: "+ cursor);
-//            return true; //row exists
-//        }
-//        else
-//            return false;
-//
-//
-//    }
+
+    public void addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        System.out.println("username1: " + user.getUsername());
+        boolean exists = getUserByName(user.getUsername());
+        if(exists == false) {
+            values.put(KEY_USERNAME, user.getUsername()); // Contact Name
+            values.put(KEY_PASSWORD, user.getPassword()); // Contact Phone Number
+            // Inserting Row
+            db.insert(TABLE_WORDPIN, null, values);
+            System.out.println("inserted successfully");
+        }
+        db.close(); // Closing database connection
+    }
+
+    public boolean getUserByName(String username) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        System.out.println("username: "+ username);
+        Cursor cursor = db.query(TABLE_WORDPIN,
+                new String[]{KEY_USERNAME},
+                KEY_USERNAME + " = ? ",
+                new String[]{username},
+                null, null, null, null);
+
+        if(cursor.moveToFirst()) {
+            System.out.println("cursor: "+ cursor);
+            return true; //row exists
+        }
+        else
+            return false;
+
+
+    }
+
 //
 //
 //    public String getPassByName(String username){

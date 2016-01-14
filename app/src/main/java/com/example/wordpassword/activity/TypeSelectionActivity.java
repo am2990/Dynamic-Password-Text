@@ -19,14 +19,19 @@ public class TypeSelectionActivity extends AppCompatActivity {
 
     private int passwordType = 0;
     Bundle extra;
-
+    Intent iuser,icheckuser;
+    String str_usern,checkuser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_type_selection);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        iuser=getIntent();
+        icheckuser = getIntent();
 
+        checkuser = icheckuser.getStringExtra("checkuser");
+        str_usern = iuser.getStringExtra("usern");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,6 +80,8 @@ public class TypeSelectionActivity extends AppCompatActivity {
         extra.putInt(Constants.PASSWORD_TYPE, passwordType);
         Intent intent = new Intent(getBaseContext(), WordSelection.class);
         intent.putExtra("extra", extra);
+        intent.putExtra("usern",str_usern);
+        intent.putExtra("checkuser", checkuser);
         startActivity(intent);
     }
 

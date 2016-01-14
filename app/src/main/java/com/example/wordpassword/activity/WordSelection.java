@@ -43,7 +43,8 @@ public class WordSelection extends AppCompatActivity {
     ListView listView;
     ArrayAdapter<String> adapter;
     Context mContext;
-
+    Intent iuser,icheckuser;
+    String str_usern,checkuser;
     View headerView;
     TextView titleView;
 
@@ -67,7 +68,11 @@ public class WordSelection extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        iuser=getIntent();
+        icheckuser = getIntent();
 
+        checkuser = icheckuser.getStringExtra("checkuser");
+        str_usern = iuser.getStringExtra("usern");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,6 +367,8 @@ public class WordSelection extends AppCompatActivity {
             extra.putSerializable("notSelectedWordArrayList", notSelectedWords);
             Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
             intent.putExtra("extra", extra);
+            intent.putExtra("usern",str_usern);
+            intent.putExtra("checkuser", checkuser);
             startActivity(intent);
 
         }
