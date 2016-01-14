@@ -50,8 +50,29 @@ public class SampleTagCloud extends Activity {
 		ArrayList<String> notSelected = (ArrayList<String>) extra.getSerializable("notSelectedWordArrayList");
 
 		ArrayList<String> wordList = new ArrayList<>();
+
+		Random r = new Random();
+		int size = selected.size();
+		if( size > 3) {
+		// pick 3 words from selected list
+			for (int i = 0; i < size - 3; i++) {
+				int ran = r.nextInt(selected.size());
+				String word = selected.get(ran);
+//				Log.d(TAG, "selected word from S" + word);
+				selected.remove(word);
+
+			}
+
+		}
+		for (int i = 0; i < selected.size() ; i++) {
+
+			String word = selected.get(i);
+			Log.d(TAG, "selected word from S" + word);
+
+		}
+
 		wordList.addAll(selected);
-		wordList.addAll(notSelected);
+//		wordList.addAll(notSelected);
 
 		// @SuppressWarnings("unchecked")
 		//Step1: get screen resolution:
@@ -118,7 +139,7 @@ public class SampleTagCloud extends Activity {
 		for(int i =0 ; i < 3; i++){
 			int ran = r.nextInt(list.size());
 			String word = list.get(ran);
-			tempList.add(new Tag(word, r.nextInt(10)));
+			tempList.add(new Tag(word, r.nextInt(10), word));
 			Log.d(TAG, "selected word from S" + word);
 			list.remove(word);
 
@@ -128,7 +149,7 @@ public class SampleTagCloud extends Activity {
 			//TODO if list size if less than 7 randomly add words
 			int ran = r.nextInt(list.size());
 			String word = list.get(ran);
-			tempList.add(new Tag(word, r.nextInt(10)));
+			tempList.add(new Tag(word, r.nextInt(10), word));
 			Log.d(TAG, "selected word from NS" + word);
 			list.remove(word);
 		}
