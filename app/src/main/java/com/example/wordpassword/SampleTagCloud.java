@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,8 @@ public class SampleTagCloud extends Activity {
 	String stritr;
 	int g=0;
 	int p=0;
+	Intent iuser,icheckuser;
+	String str_usern,checkuser;
 	//ArrayList<Object> objects;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +75,17 @@ public class SampleTagCloud extends Activity {
 		}
 
 		wordList.addAll(selected);
+
 //		wordList.addAll(notSelected);
+
+
+		iuser=getIntent();
+		icheckuser = getIntent();
+
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
+
+
 
 		// @SuppressWarnings("unchecked")
 		//Step1: get screen resolution:
@@ -93,7 +106,7 @@ public class SampleTagCloud extends Activity {
 
 
 		//Step3: create our TagCloudview and set it as the content of our MainActivity
-		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList ); //passing current context
+		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList, checkuser, str_usern ); //passing current context
 		System.out.println("value for objects: "+wordList);
 		setContentView(mTagCloudView);
 		mTagCloudView.requestFocus();

@@ -37,12 +37,19 @@ public class MainActivity extends Activity{
 	EditText wordedit;
 	Button bsubmit;
 	String Wordphrase;
+	Intent iuser,icheckuser;
+	//boolean checkuser;
+	String str_usern,checkuser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		iuser=getIntent();
+		icheckuser = getIntent();
 
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
 		bsubmit=(Button) findViewById(R.id.bsubmit);
 		wordedit = (EditText) findViewById(R.id.et1);
 
@@ -142,7 +149,8 @@ public class MainActivity extends Activity{
 //			     Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
 				Intent intent = new Intent(getBaseContext(), TypeSelectionActivity.class);
 				intent.putExtra("extra", extra);
-
+				intent.putExtra("usern",str_usern);
+				intent.putExtra("checkuser", checkuser);
 
 				startActivity(intent);
 
