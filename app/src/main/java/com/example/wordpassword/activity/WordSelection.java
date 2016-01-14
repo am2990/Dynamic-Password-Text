@@ -282,27 +282,27 @@ public class WordSelection extends AppCompatActivity {
 
             HttpURLConnection urlConnection = null;
             String result = "";
-//            try {
-//                URL url = new URL(urls);
-//                urlConnection = (HttpURLConnection) url.openConnection();
-//                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-//                if (in != null)
-//                    result = convertInputStreamToString(in);
-//                else
-//                    result = "Did not work!";
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            } finally {
-//                urlConnection.disconnect();
-//            }
+            try {
+                URL url = new URL(urls);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                if (in != null)
+                    result = convertInputStreamToString(in);
+                else
+                    result = "Did not work!";
 
-            if(urls.contains("kill"))
-                result = "{\"noun\":{\"syn\":[\"killing\",\"putting to death\",\"conclusion\",\"destruction\",\"devastation\",\"ending\",\"termination\"]},\"verb\":{\"syn\":[\"shoot down\",\"defeat\",\"vote down\",\"vote out\",\"stamp out\",\"toss off\",\"pop\",\"bolt down\",\"belt down\",\"pour down\",\"down\",\"drink down\",\"obliterate\",\"wipe out\",\"ache\",\"be\",\"beat\",\"blackball\",\"cut\",\"destroy\",\"destruct\",\"drink\",\"end\",\"exhaust\",\"hit\",\"hurt\",\"imbibe\",\"negative\",\"overcome\",\"overpower\",\"overtake\",\"overwhelm\",\"suffer\",\"sweep over\",\"switch off\",\"take away\",\"take out\",\"terminate\",\"tucker\",\"tucker out\",\"turn off\",\"turn out\",\"veto\",\"wash up\",\"whelm\"],\"rel\":[\"kill off\"]}}\n";
-            else if(urls.contains("dry"))
-                result = "{\"adjective\":{\"syn\":[\"ironic\",\"ironical\",\"wry\",\"juiceless\",\"teetotal\"],\"ant\":[\"phlegmy\",\"sweet\",\"wet\"],\"rel\":[\"nonsweet\",\"sour\",\"sugarless\"],\"sim\":[\"adust\",\"air-dried\",\"air-dry\",\"alcoholic\",\"arid\",\"baked\",\"bone dry\",\"bone-dry\",\"brut\",\"desiccated\",\"dried\",\"dried-out\",\"dried-up\",\"dry-eyed\",\"dry-shod\",\"humorous\",\"humourous\",\"kiln-dried\",\"medium-dry\",\"milkless\",\"parched\",\"plain\",\"rainless\",\"scorched\",\"sear\",\"sec\",\"semi-dry\",\"semiarid\",\"sere\",\"shriveled\",\"shrivelled\",\"sober\",\"solid\",\"sunbaked\",\"tearless\",\"thirsty\",\"unemotional\",\"unexciting\",\"unproductive\",\"unstimulating\",\"unsweet\",\"waterless\",\"withered\"]},\"noun\":{\"syn\":[\"prohibitionist\",\"crusader\",\"meliorist\",\"reformer\",\"reformist\",\"social reformer\"]},\"verb\":{\"syn\":[\"dry out\",\"alter\",\"change\",\"modify\"],\"ant\":[\"wet\"]}}";
-            else if(urls.contains("heaven"))
-                result = "{\"noun\":{\"syn\":[\"Eden\",\"paradise\",\"Nirvana\",\"promised land\",\"Shangri-la\",\"Heaven\",\"fictitious place\",\"imaginary place\",\"mythical place\",\"part\",\"region\"],\"ant\":[\"Hell\"]}}\n";
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                urlConnection.disconnect();
+            }
+
+//            if(urls.contains("kill"))
+//                result = "{\"noun\":{\"syn\":[\"killing\",\"putting to death\",\"conclusion\",\"destruction\",\"devastation\",\"ending\",\"termination\"]},\"verb\":{\"syn\":[\"shoot down\",\"defeat\",\"vote down\",\"vote out\",\"stamp out\",\"toss off\",\"pop\",\"bolt down\",\"belt down\",\"pour down\",\"down\",\"drink down\",\"obliterate\",\"wipe out\",\"ache\",\"be\",\"beat\",\"blackball\",\"cut\",\"destroy\",\"destruct\",\"drink\",\"end\",\"exhaust\",\"hit\",\"hurt\",\"imbibe\",\"negative\",\"overcome\",\"overpower\",\"overtake\",\"overwhelm\",\"suffer\",\"sweep over\",\"switch off\",\"take away\",\"take out\",\"terminate\",\"tucker\",\"tucker out\",\"turn off\",\"turn out\",\"veto\",\"wash up\",\"whelm\"],\"rel\":[\"kill off\"]}}\n";
+//            else if(urls.contains("dry"))
+//                result = "{\"adjective\":{\"syn\":[\"ironic\",\"ironical\",\"wry\",\"juiceless\",\"teetotal\"],\"ant\":[\"phlegmy\",\"sweet\",\"wet\"],\"rel\":[\"nonsweet\",\"sour\",\"sugarless\"],\"sim\":[\"adust\",\"air-dried\",\"air-dry\",\"alcoholic\",\"arid\",\"baked\",\"bone dry\",\"bone-dry\",\"brut\",\"desiccated\",\"dried\",\"dried-out\",\"dried-up\",\"dry-eyed\",\"dry-shod\",\"humorous\",\"humourous\",\"kiln-dried\",\"medium-dry\",\"milkless\",\"parched\",\"plain\",\"rainless\",\"scorched\",\"sear\",\"sec\",\"semi-dry\",\"semiarid\",\"sere\",\"shriveled\",\"shrivelled\",\"sober\",\"solid\",\"sunbaked\",\"tearless\",\"thirsty\",\"unemotional\",\"unexciting\",\"unproductive\",\"unstimulating\",\"unsweet\",\"waterless\",\"withered\"]},\"noun\":{\"syn\":[\"prohibitionist\",\"crusader\",\"meliorist\",\"reformer\",\"reformist\",\"social reformer\"]},\"verb\":{\"syn\":[\"dry out\",\"alter\",\"change\",\"modify\"],\"ant\":[\"wet\"]}}";
+//            else if(urls.contains("heaven"))
+//                result = "{\"noun\":{\"syn\":[\"Eden\",\"paradise\",\"Nirvana\",\"promised land\",\"Shangri-la\",\"Heaven\",\"fictitious place\",\"imaginary place\",\"mythical place\",\"part\",\"region\"],\"ant\":[\"Hell\"]}}\n";
 
             return result;
         }
