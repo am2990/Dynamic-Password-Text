@@ -156,7 +156,7 @@ public class Tag implements Comparable<Tag>{
 	public void toggle() {
 		
 		if(set){
-			setColorR(50);setColorB(27);setColorG(90);
+			setColorR(150);setColorB(157);setColorG(200);
 			this.set = false;
 		}
 		else if(!set){

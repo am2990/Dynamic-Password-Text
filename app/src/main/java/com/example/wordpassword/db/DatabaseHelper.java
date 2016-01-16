@@ -48,8 +48,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String KEY_USERNAME = "username";
-    private static final String KEY_PASSWORD = "password";
-    private static final String KEY_WRONGTRY = "wrongtry";
+    private static final String KEY_SELECTED = "selected";
+    private static final String KEY_NSELECTED = "nselected";
 
 
 
@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Table Create Statements
     // t_login table create statement
     private static final String CREATE_TABLE_t_login = "CREATE TABLE "
-            + TABLE_WORDPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_PASSWORD + " VARCHAR," + KEY_WRONGTRY + " INTEGER " + " )";
+            + TABLE_WORDPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_SELECTED + " VARCHAR," + KEY_NSELECTED + " VARCHAR " + " )";
 
 
 
@@ -97,8 +97,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         System.out.println("username1: " + user.getUsername());
         boolean exists = getUserByName(user.getUsername());
         if(exists == false) {
-            values.put(KEY_USERNAME, user.getUsername()); // Contact Name
-            values.put(KEY_PASSWORD, user.getPassword()); // Contact Phone Number
+            values.put(KEY_USERNAME, user.getUsername());
+            values.put(KEY_SELECTED, user.getSelected());
+            values.put(KEY_NSELECTED, user.getNselected());
             // Inserting Row
             db.insert(TABLE_WORDPIN, null, values);
             System.out.println("inserted successfully");
@@ -110,13 +111,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
         System.out.println("username: "+ username);
-        Cursor cursor = db.query(TABLE_WORDPIN,
+        String selectString = "SELECT * FROM " + TABLE_WORDPIN + " WHERE " + KEY_USERNAME + " =?";
+       /* Cursor cursor = db.query(TABLE_WORDPIN,
                 new String[]{KEY_USERNAME},
                 KEY_USERNAME + " = ? ",
                 new String[]{username},
                 null, null, null, null);
-
-        if(cursor.moveToFirst()) {
+*/
+        Cursor cursor = db.rawQuery(selectString, new String[]{username});
+        if(cursor.getCount()>0) {
             System.out.println("cursor: "+ cursor);
             return true; //row exists
         }
@@ -125,7 +128,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     }
+    public String getSelectedByName(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
 
+        Cursor cursor = db.query(TABLE_WORDPIN, new String[] { KEY_ID,
+                        KEY_USERNAME, KEY_SELECTED }, KEY_USERNAME + "=?",
+                new String[] { username }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        String selected = new String((cursor.getString(2)));
+        //System.out.println("usern db: "+ usern);
+        // return contact
+        return selected;
+
+    }
+    public String getNselectedByName(String username){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(TABLE_WORDPIN, new String[] { KEY_ID,
+                        KEY_USERNAME, KEY_NSELECTED }, KEY_USERNAME + "=?",
+                new String[] { username }, null, null, null, null);
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        String notSelected = new String((cursor.getString(2)));
+        //System.out.println("usern db: "+ usern);
+        // return contact
+        return notSelected;
+
+    }
 //
 //
 //    public String getPassByName(String username){

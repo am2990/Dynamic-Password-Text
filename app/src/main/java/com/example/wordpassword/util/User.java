@@ -8,6 +8,8 @@ public class User {
     int id;
     String username;
     String password;
+    String selected;
+    String nselected;
     int wrongtry;
 
     // Empty constructor
@@ -36,7 +38,10 @@ public class User {
     public String getPassword(){
         return this.password;
     }
-
+    public String getSelected(){ return this.selected; }
+    public void setSelected(String selected){ this.selected = selected; }
+    public String getNselected(){ return this.nselected; }
+    public void setNselected(String nselected){ this.nselected = nselected; }
     // setting username
     public void setPassword(String password){
         this.password = password;

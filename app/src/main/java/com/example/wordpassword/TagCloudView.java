@@ -23,6 +23,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordpassword.db.DatabaseHelper;
+import com.example.wordpassword.util.User;
+
 public class TagCloudView extends RelativeLayout {
 	RelativeLayout navigation_bar;
 	TextView mTextView1;
@@ -34,15 +37,19 @@ public class TagCloudView extends RelativeLayout {
 	Object[] arr=new Object[100];
 	Object[] array=new Object[100];
 	boolean flag1=true;
-
-	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern) {
-		this(mContext, width, height, tagList, 6 , 34, 1, objects, checkuser, str_usern); //default for min/max text size
+	DatabaseHelper db;
+	User user = new User();
+	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
+		this(mContext, width, height, tagList, 6 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
 		System.out.println("checkuserintag: "+ checkuser);
+		System.out.println("selected tagcloudview: "+ selected);
+		System.out.println("nselected tagcloudview: "+ notSelected);
+		db = new DatabaseHelper(mContext);
 
 	}
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, 
-			int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern) {
+			int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
 
 
 
@@ -50,7 +57,7 @@ public class TagCloudView extends RelativeLayout {
 		this.mContext= mContext;
 		this.textSizeMin = textSizeMin;
 		this.textSizeMax= textSizeMax;
-
+		db = new DatabaseHelper(mContext);
 		tspeed = scrollSpeed;
 
 		//set the center of the sphere on center of our screen:
@@ -70,7 +77,8 @@ public class TagCloudView extends RelativeLayout {
 		float[] tempColor1 = {0.9412f,0.7686f,0.2f,1}; //rgb Alpha 
 		//{1f,0f,0f,1}  red       {0.3882f,0.21568f,0.0f,1} orange
 		//{0.9412f,0.7686f,0.2f,1} light orange
-		float[] tempColor2 = {1f,0f,0f,1}; //rgb Alpha 
+		//float[] tempColor2 = {1f,0f,0f,1}; //rgb Alpha
+		float[] tempColor2 = {1f,0f,0f,1};
 		//{0f,0f,1f,1}  blue      {0.1294f,0.1294f,0.1294f,1} grey
 		//{0.9412f,0.7686f,0.2f,1} light orange
 		//float[] tempColor3 = {0.1294f,0.1294f,0.1294f,1};
@@ -121,12 +129,13 @@ public class TagCloudView extends RelativeLayout {
 			mTextView.get(i).setTextColor(mergedColor);
 			mTextView.get(i).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
 			addView(mTextView.get(i));
-			mTextView.get(i).setOnClickListener(OnTagClickListener(tempTag.getUrl(), objects));
+			mTextView.get(i).setOnClickListener(OnTagClickListener(tempTag.getUrl(), objects, checkuser, str_usern, selected, notSelected));
 			i++;
 		}
 
 
 	}
+
 
 
 
@@ -166,7 +175,7 @@ public class TagCloudView extends RelativeLayout {
 		mTextView.get(i).setTextColor(mergedColor);
 		mTextView.get(i).setTextSize((int)(newTag.getTextSize() * newTag.getScale()));
 		addView(mTextView.get(i));
-		mTextView.get(i).setOnClickListener(OnTagClickListener(newTag.getUrl(), null));		
+		mTextView.get(i).setOnClickListener(OnTagClickListener(newTag.getUrl(), null, null, null, null,null));
 	}
 
 	public boolean Replace(Tag newTag, String oldTagText){
@@ -186,8 +195,8 @@ public class TagCloudView extends RelativeLayout {
 				mTextView.get(tempTag.getParamNo()).setTextSize(
 						(int)(tempTag.getTextSize() * tempTag.getScale()));
 				int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
-						(int)	(tempTag.getColorR() * 255), 
-						(int)	(tempTag.getColorG() * 255), 
+						(int)	(tempTag.getColorR() * 255),
+						(int)	(tempTag.getColorG() * 255),
 						(int) (tempTag.getColorB() * 255));
 				mTextView.get(tempTag.getParamNo()).setTextColor(mergedColor);
 				mTextView.get(tempTag.getParamNo()).bringToFront();
@@ -365,7 +374,7 @@ public class TagCloudView extends RelativeLayout {
 
 	//for handling the click on the tags
 	//onclick open the tag url in a new window. Back button will bring you back to TagCloud
-	View.OnClickListener OnTagClickListener(final String url,final ArrayList<String> objects){
+	View.OnClickListener OnTagClickListener(final String url,final ArrayList<String> objects, final String checkuser, final String str_usern, final ArrayList<String> selected, final ArrayList<String> notSelected){
 		return new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -466,6 +475,16 @@ public class TagCloudView extends RelativeLayout {
 						/*Intent intent = new Intent(mContext, NextActivity.class);
 						 intent.putExtra("aaa", "extra");
 						 startActivity(intent);*/
+						if(checkuser.equalsIgnoreCase("false")){
+
+							user.setUsername(str_usern);
+							user.setNselected(notSelected.toString());
+							user.setSelected(selected.toString());
+							System.out.println("selected tagcloudview 1: " + selected.toString());
+							System.out.println("not selected tagcloudview 1: "+ notSelected.toString());
+							db.addUser(user);
+						}
+
 						callNextAct();
 
 					}

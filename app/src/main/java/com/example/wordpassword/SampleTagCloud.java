@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.CheckResult;
 import android.util.Log;
 import android.view.Display;
 import android.view.Window;
@@ -32,7 +33,7 @@ public class SampleTagCloud extends Activity {
 	String stritr;
 	int g=0;
 	int p=0;
-	Intent iuser,icheckuser;
+	Intent iuser,icheckuser,iselected,inotSelected;
 	String str_usern,checkuser;
 	//ArrayList<Object> objects;
 
@@ -44,46 +45,56 @@ public class SampleTagCloud extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		Bundle extra = getIntent().getBundleExtra("extra");
-		@SuppressWarnings("unchecked")
+
 //		ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
-
+				iuser=getIntent();
+		icheckuser = getIntent();
+		iselected = getIntent();
+		inotSelected = getIntent();
+		checkuser = icheckuser.getStringExtra("checkuser");
+		str_usern = iuser.getStringExtra("usern");
+ArrayList<String> selected = new ArrayList<String>();
+		ArrayList<String> notSelected = new ArrayList<String>();
 				// get selected words array
-				ArrayList<String> selected = (ArrayList<String>) extra.getSerializable("selectedWordArrayList");
-		// get not selected words array
-		ArrayList<String> notSelected = (ArrayList<String>) extra.getSerializable("notSelectedWordArrayList");
-
+if(checkuser.equalsIgnoreCase("false")) {
+	selected = (ArrayList<String>) extra.getSerializable("selectedWordArrayList");
+	// get not selected words array
+	notSelected = (ArrayList<String>) extra.getSerializable("notSelectedWordArrayList");
+	System.out.println("selected sampletag: " + selected);
+	System.out.println("notselected sampletag: " + notSelected);
+}
+		else{
+				selected = iselected.getStringArrayListExtra("selected");
+				notSelected = inotSelected.getStringArrayListExtra("notSelected");
+		}
 		ArrayList<String> wordList = new ArrayList<>();
+		ArrayList<String> removeselected = new ArrayList<>(selected);
 
 		Random r = new Random();
-		int size = selected.size();
+		int size = removeselected.size();
 		if( size > 3) {
 		// pick 3 words from selected list
 			for (int i = 0; i < size - 3; i++) {
-				int ran = r.nextInt(selected.size());
-				String word = selected.get(ran);
+				int ran = r.nextInt(removeselected.size());
+				String word = removeselected.get(ran);
 //				Log.d(TAG, "selected word from S" + word);
-				selected.remove(word);
+				removeselected.remove(word);
 
 			}
 
 		}
-		for (int i = 0; i < selected.size() ; i++) {
+		for (int i = 0; i < removeselected.size() ; i++) {
 
-			String word = selected.get(i);
+			String word = removeselected.get(i);
 			Log.d(TAG, "selected word from S" + word);
 
 		}
 
-		wordList.addAll(selected);
+		wordList.addAll(removeselected);
 
 //		wordList.addAll(notSelected);
 
 
-		iuser=getIntent();
-		icheckuser = getIntent();
-
-		checkuser = icheckuser.getStringExtra("checkuser");
-		str_usern = iuser.getStringExtra("usern");
 
 
 
@@ -102,11 +113,11 @@ public class SampleTagCloud extends Activity {
 		//notice: All tags must have unique text field
 		//if not, only the first occurrence will be added and the rest will be ignored
 
-		List<Tag> myTagList = createTags(selected, notSelected);
+		List<Tag> myTagList = createTags(removeselected, notSelected);
 
 
 		//Step3: create our TagCloudview and set it as the content of our MainActivity
-		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList, checkuser, str_usern ); //passing current context
+		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList, checkuser, str_usern, selected, notSelected ); //passing current context
 		System.out.println("value for objects: "+wordList);
 		setContentView(mTagCloudView);
 		mTagCloudView.requestFocus();

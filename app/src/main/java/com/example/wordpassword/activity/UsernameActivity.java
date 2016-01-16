@@ -18,6 +18,11 @@ import com.example.wordpassword.SampleTagCloud;
 import com.example.wordpassword.db.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class UsernameActivity extends ActionBarActivity {
 
     EditText username;
@@ -61,10 +66,27 @@ public class UsernameActivity extends ActionBarActivity {
                 else {
                     Toast.makeText(getApplicationContext(), "Login!", Toast.LENGTH_SHORT).show();
                     checkuser = "true";
+                    String str_selected = db.getSelectedByName(u);
+                    String str_notSelected = db.getNselectedByName(u);
+
+                    int indexOfOpenBracket1 = str_selected.indexOf("[");
+                    int indexOfLastBracket1 = str_selected.lastIndexOf("]");
+                    int indexOfOpenBracket2 = str_notSelected.indexOf("[");
+                    int indexOfLastBracket2 = str_notSelected.lastIndexOf("]");
+
+                    System.out.println("hhh: "+str_selected.substring(indexOfOpenBracket1+1, indexOfLastBracket1));
+
+                    ArrayList<String> selected = new ArrayList<String>(Arrays.asList(str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1).split(",")));
+                    System.out.println("selected al:"+ selected);
+
+                    ArrayList<String> notSelected = new ArrayList<String>(Arrays.asList(str_notSelected.substring(indexOfOpenBracket2+1, indexOfLastBracket2).split(",")));
+                    System.out.println("selected username: " + selected);
                     Intent intent = new Intent();
                     intent.setClass(UsernameActivity.this, SampleTagCloud.class);
                     intent.putExtra("usern", u);
                     intent.putExtra("checkuser",checkuser);
+                    intent.putStringArrayListExtra("selected", selected);
+                    intent.putStringArrayListExtra("notSelected",notSelected);
                     startActivity(intent);
                 }
             }
