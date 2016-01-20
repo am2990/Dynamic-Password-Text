@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import android.content.Context;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.LinkMovementMethod;
 import android.app.Activity;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.BufferType;
+import android.widget.Toast;
 
 import com.example.wordpassword.activity.TypeSelectionActivity;
 
@@ -38,8 +40,8 @@ public class MainActivity extends Activity{
 	Button bsubmit;
 	String Wordphrase;
 	Intent iuser,icheckuser;
-	//boolean checkuser;
 	String str_usern,checkuser;
+	Context mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class MainActivity extends Activity{
 		bsubmit=(Button) findViewById(R.id.bsubmit);
 		wordedit = (EditText) findViewById(R.id.et1);
 
+		mContext = this;
 		bsubmit.setOnClickListener(new View.OnClickListener() {
 			@ Override
 			public void onClick(View v) {
@@ -82,7 +85,7 @@ public class MainActivity extends Activity{
 				int k=0,i,j;
 				ArrayList<String> wordsList = new ArrayList<String>();
 				String sCurrentLine;
-				String[] stopwords = new String[2000];
+				ArrayList<String> stopwords = new ArrayList<String>();
 				try{
 					ContextWrapper context = null;
 					//@SuppressWarnings("null")
@@ -95,8 +98,8 @@ public class MainActivity extends Activity{
 					//  BufferedReader br= new BufferedReader(fr);
 					while ((sCurrentLine = br.readLine()) != null){
 						//System.out.println("hello from while");
-						stopwords[k]=sCurrentLine;
-						k++;
+						stopwords.add(sCurrentLine);
+
 					}
 					// String s="I love this phone, its super fast and there's so much new and cool things with jelly bean....but of recently I've seen some bugs.";
 					// String s = wordArrayList.toString();
@@ -114,14 +117,10 @@ public class MainActivity extends Activity{
 						wordsList.add(word);
 						//  System.out.println("hello from words list "+wordsList);
 					}
+					// Remove stop words from the orignal sentence
 					for(int ii = 0; ii < wordsList.size(); ii++){
-						for(int jj = 0; jj < k; jj++){
-							if(stopwords[jj].contains(wordsList.get(ii).toLowerCase())){
-								//  wordsList.remove(ii);
-								wordsList.set(ii,"");
-
-								break;
-							}
+						if(stopwords.contains(wordsList.get(ii).toLowerCase())){
+							wordsList.set(ii,"");
 						}
 					}
 					System.out.println("hello from words list "+wordsList);
@@ -135,6 +134,10 @@ public class MainActivity extends Activity{
 							intent.putExtra("extra", str);*/
 					wordsList.removeAll(Collections.singleton(""));
 					System.out.println("hello from words list "+wordsList);
+					if( wordsList.size() < 3 ){
+						Toast.makeText(mContext, "Need mor words !!!", Toast.LENGTH_LONG).show();
+						return;
+					}
 
 					//  startActivity(intent);
 				}catch(Exception ex){
