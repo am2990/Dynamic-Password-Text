@@ -11,11 +11,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class WordSelection extends AppCompatActivity {
@@ -51,7 +58,7 @@ public class WordSelection extends AppCompatActivity {
     TextView titleView;
 
     int type = 0;
-    String[] words;
+    ArrayList<String> words;
     String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
     private static int counter;
     ArrayList<String> selectedWords, notSelectedWords, wordList;
@@ -65,6 +72,7 @@ public class WordSelection extends AppCompatActivity {
 
         mContext = this;
 
+        words = new ArrayList<>();
 //        TextView tv = (TextView) findViewById(R.id.textView);
         listView = (ListView) findViewById(R.id.list);
         counter = 0;
@@ -79,10 +87,53 @@ public class WordSelection extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Add your own words !!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
-            }
-        });
+                LayoutInflater layoutInflater
+                        = (LayoutInflater)getBaseContext()
+                        .getSystemService(LAYOUT_INFLATER_SERVICE);
+                View popupView = layoutInflater.inflate(R.layout.popup, null);
+                final PopupWindow popupWindow = new PopupWindow(
+                        popupView,
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    popupWindow.setElevation(50.0f);
+                }
+
+                popupWindow.setFocusable(true);
+                Button addBtn = (Button)popupView.findViewById(R.id.add);
+                Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
+                final EditText addWord = (EditText)popupView.findViewById(R.id.et_word);
+                addBtn.setOnClickListener(new Button.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String newWord = addWord.getText().toString();
+                        Log.d(TAG, newWord);
+                        words.add(newWord);
+                        adapter = new ArrayAdapter<String>(mContext,
+                                android.R.layout.simple_list_item_multiple_choice, words);
+                        listView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                        addWord.setText("");
+                    }
+                });
+
+                btnDismiss.setOnClickListener(new Button.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        // TODO Auto-generated method stub
+                        popupWindow.dismiss();
+                    }
+                });
+
+//                popupWindow.showAsDropDown(listView, 50, -30);
+                popupWindow.showAtLocation(listView, Gravity.CENTER, 0 ,0);
+
+            }});
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -281,7 +332,11 @@ public class WordSelection extends AppCompatActivity {
         }
 
         protected void onPostExecute(Boolean result) {
-            words = wm.getWordList(type, curr_word);
+            String[] wordarr = wm.getWordList(type, curr_word);
+            for(int i = 0; i< wordarr.length; i++){
+                words.add(wordarr[i]);
+            }
+
             adapter = new ArrayAdapter<String>(mContext,
                     android.R.layout.simple_list_item_multiple_choice, words);
 
@@ -339,7 +394,7 @@ public class WordSelection extends AppCompatActivity {
     public void nextAction(View view){
 
         // get the current word
-        int len = words.length;
+        int len = words.size();
 
         SparseBooleanArray checked = listView.getCheckedItemPositions();
 
@@ -359,15 +414,10 @@ public class WordSelection extends AppCompatActivity {
             }
             else if(counter < wordList.size()) {
                 String word = wordList.get(counter);
-
+                words = new ArrayList<>(); // clean previous word list for adapter
                 new WordAPITask().execute(word);
                 wm = new WordModel(word);
-
-
-
                 titleView.setText(titlePrefix + " - " + word.toUpperCase());
-//                listView.addHeaderView(headerView);
-
                 counter++;
 
             }
