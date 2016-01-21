@@ -73,8 +73,8 @@ public class MainActivity extends Activity{
 				for ( String word : arr) {
 
 					System.out.println("hello from word "+word);
-
-					wordArrayList.add(word);
+					if(!wordArrayList.contains(word))
+						wordArrayList.add(word);
 					System.out.println("hello from array list "+wordArrayList);
 				}
 				 

@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordpassword.activity.UsernameActivity;
 import com.example.wordpassword.db.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
@@ -43,7 +44,7 @@ public class TagCloudView extends RelativeLayout {
 		this(mContext, width, height, tagList, 6 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
 		System.out.println("checkuserintag: "+ checkuser);
-		System.out.println("selected tagcloudview: "+ selected);
+		System.out.println("selected tagcloudview: " + selected);
 		System.out.println("nselected tagcloudview: "+ notSelected);
 		db = new DatabaseHelper(mContext);
 
@@ -606,7 +607,7 @@ public class TagCloudView extends RelativeLayout {
 	private void callNextAct() {
 		// TODO Auto-generated method stub
 
-		Intent intent = new Intent(mContext, NextActivity.class);
+		Intent intent = new Intent(mContext, UsernameActivity.class);
 
 		mContext.startActivity(intent);
 	}

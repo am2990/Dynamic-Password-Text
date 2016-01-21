@@ -3,6 +3,7 @@ package com.example.wordpassword.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -16,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.wordpassword.R;
 import com.example.wordpassword.SampleTagCloud;
@@ -51,7 +53,7 @@ public class WordSelection extends AppCompatActivity {
     int type = 0;
     String[] words;
     String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
-    private static int counter = 0;
+    private static int counter;
     ArrayList<String> selectedWords, notSelectedWords, wordList;
     HashMap<String, WordModel> word_hm = new HashMap<>();
 
@@ -65,7 +67,7 @@ public class WordSelection extends AppCompatActivity {
 
 //        TextView tv = (TextView) findViewById(R.id.textView);
         listView = (ListView) findViewById(R.id.list);
-
+        counter = 0;
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         iuser=getIntent();
@@ -116,9 +118,17 @@ public class WordSelection extends AppCompatActivity {
                                     long id) {
                 final View selectedView = view; // Save selected view in final variable**
                 Object listItem = listView.getItemAtPosition(position);
-                Log.d(TAG, listItem.toString() +" -ddd");
-                selectedWords.add(listItem.toString());
-                notSelectedWords.remove(listItem.toString());
+
+                if(!selectedWords.contains(listItem.toString())) {
+                    Log.d(TAG, listItem.toString() + " Adding to selected");
+                    selectedWords.add(listItem.toString());
+                    notSelectedWords.remove(listItem.toString());
+                }
+                else{
+                    Log.d(TAG, listItem.toString() + " Removing from selected");
+                    notSelectedWords.add(listItem.toString());
+                    selectedWords.remove(listItem.toString());
+                }
             }
         });
     }
@@ -333,47 +343,58 @@ public class WordSelection extends AppCompatActivity {
 
         SparseBooleanArray checked = listView.getCheckedItemPositions();
 
-        for (int i = 0; i < len; i++)
-            if (checked.get(i)) {
-                String item = words[i];
-                /* do whatever you want with the checked item */
-                Log.d(TAG, "selected" + item);
+//        for (int i = 0; i < len; i++)
+//            if (checked.get(i)) {
+//                String item = words[i];
+//                /* do whatever you want with the checked item */
+//                Log.d(TAG, "selected" + item);
 //                selectedWords.add(item);
 //                notSelectedWords.remove(item);
-            }
+//            }
 
         // pick next word from word list
-        if(counter < wordList.size()) {
-            String word = wordList.get(counter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if(listView.getCheckedItemCount() == 0){
+                Toast.makeText(this, "Select atleast one word !!!", Toast.LENGTH_LONG).show();
+            }
+            else if(counter < wordList.size()) {
+                String word = wordList.get(counter);
 
-            new WordAPITask().execute(word);
-            wm = new WordModel(word);
+                new WordAPITask().execute(word);
+                wm = new WordModel(word);
 
 
 
-            titleView.setText(titlePrefix + " - " + word.toUpperCase());
-            listView.addHeaderView(headerView);
+                titleView.setText(titlePrefix + " - " + word.toUpperCase());
+//                listView.addHeaderView(headerView);
 
-            counter++;
+                counter++;
 
-        }
-        else{
-            Log.d(TAG,"take me to next activity");
-            Log.d(TAG,"selected words-" + selectedWords.size());
-            Log.d(TAG,"Not selected words-" + notSelectedWords.size());
+            }
+            else{
+                Log.d(TAG,"take me to next activity");
+                Log.d(TAG,"selected words-" + selectedWords.size());
+                Log.d(TAG,"Not selected words-" + notSelectedWords.size());
 
-            Bundle extra = new Bundle();
-            extra.putSerializable("selectedWordArrayList", selectedWords);
-            extra.putSerializable("notSelectedWordArrayList", notSelectedWords);
-            Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
-            intent.putExtra("extra", extra);
-            intent.putExtra("usern",str_usern);
-            intent.putExtra("checkuser", checkuser);
-            startActivity(intent);
+                Bundle extra = new Bundle();
+                extra.putSerializable("selectedWordArrayList", selectedWords);
+                extra.putSerializable("notSelectedWordArrayList", notSelectedWords);
+                Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
+                intent.putExtra("extra", extra);
+                intent.putExtra("usern",str_usern);
+                intent.putExtra("checkuser", checkuser);
+                startActivity(intent);
 
+            }
         }
 
         // call the async task with next word if word list empty then send to next activity
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getBaseContext(), UsernameActivity.class);
+        startActivity(intent);
     }
 
 }

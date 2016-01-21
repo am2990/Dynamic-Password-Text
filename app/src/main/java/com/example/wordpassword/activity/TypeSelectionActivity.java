@@ -47,8 +47,17 @@ public class TypeSelectionActivity extends AppCompatActivity {
         r.check(R.id.radio_ant);
         passwordType = Constants.ANTONYMS;
         extra = getIntent().getBundleExtra("extra");
-        ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
-        extra.putSerializable("wordArrayList", objects);
+        try{
+            ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
+            extra.putSerializable("wordArrayList", objects);
+
+        }catch (Exception e){
+            // means arraylist not sent with intent and probably user came back from Word Selection Activity
+            Intent intent = new Intent(getBaseContext(), UsernameActivity.class);
+            startActivity(intent);
+            // send him to first screen again
+        }
+
 
     }
 
