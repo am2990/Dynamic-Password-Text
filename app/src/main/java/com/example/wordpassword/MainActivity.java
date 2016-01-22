@@ -38,10 +38,11 @@ public class MainActivity extends Activity{
 
 	EditText wordedit;
 	Button bsubmit;
-	String Wordphrase;
+	String Wordphrase, word1;
 	Intent iuser,icheckuser;
 	String str_usern,checkuser;
 	Context mContext;
+	TextView quote1,quote2,quote3,ex;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +55,18 @@ public class MainActivity extends Activity{
 		str_usern = iuser.getStringExtra("usern");
 		bsubmit=(Button) findViewById(R.id.bsubmit);
 		wordedit = (EditText) findViewById(R.id.et1);
-
+		quote1 = (TextView) findViewById(R.id.quote1);
+		quote2 = (TextView) findViewById(R.id.quote2);
+		quote3 = (TextView) findViewById(R.id.quote3);
+		ex = (TextView) findViewById(R.id.ex);
 		mContext = this;
 		bsubmit.setOnClickListener(new View.OnClickListener() {
 			@ Override
 			public void onClick(View v) {
 
 
-				Wordphrase = wordedit.getText().toString();
+				word1 = wordedit.getText().toString().replaceAll("\"[^a-zA-Z ]\"", "");
+				Wordphrase = word1.replaceAll("\\,", "").replaceAll("\\;", "").replaceAll("\\?", "").replaceAll("\\!", "").replaceAll("\\.", "");
 				System.out.println("Word phrase: "+ Wordphrase);
 				//String[] strword = Wordphrase.split("\\,");
 
@@ -219,6 +224,26 @@ public class MainActivity extends Activity{
 		//	}*/
 
 		});
+
+		quote1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				wordedit.setText("hard work is the key to success", BufferType.EDITABLE);
+			}
+		});
+		quote2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				wordedit.setText("with great power, comes great responsibility", BufferType.EDITABLE);
+			}
+		});
+		quote3.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				wordedit.setText("an eye for an eye makes the whole world blind", BufferType.EDITABLE);
+			}
+		});
+
 	}
 
 
