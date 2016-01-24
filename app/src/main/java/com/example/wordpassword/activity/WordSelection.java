@@ -49,15 +49,17 @@ public class WordSelection extends AppCompatActivity {
 
     private final String TAG = "WordSelection";
     private static WordModel wm;
+
     ListView listView;
     ArrayAdapter<String> adapter;
     Context mContext;
     Intent iuser,icheckuser;
-    String str_usern,checkuser;
     View headerView;
     TextView titleView;
+    Button nextButton;
 
     int type = 0;
+    String str_usern,checkuser;
     ArrayList<String> words;
     String titlePrefix = "Select Synonyms/Antonyms/Similar Words";
     private static int counter;
@@ -80,6 +82,7 @@ public class WordSelection extends AppCompatActivity {
         setSupportActionBar(toolbar);
         iuser=getIntent();
         icheckuser = getIntent();
+
 
         checkuser = icheckuser.getStringExtra("checkuser");
         str_usern = iuser.getStringExtra("usern");
@@ -144,7 +147,8 @@ public class WordSelection extends AppCompatActivity {
             }});
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        nextButton = (Button)findViewById(R.id.nextbutton);
+        nextButton.setEnabled(false);
 
         //get the list of words
         Bundle extra = getIntent().getBundleExtra("extra");
@@ -353,6 +357,7 @@ public class WordSelection extends AppCompatActivity {
             //TODO by default set the word itself as selected
 //            listView.setItemChecked(1,true);
             word_hm.put(curr_word, wm);
+            nextButton.setEnabled(true);
 
 
         }
@@ -400,6 +405,7 @@ public class WordSelection extends AppCompatActivity {
 
     }
 
+    int selected = 0;
     public void nextAction(View view){
 
         // get the current word
@@ -418,7 +424,8 @@ public class WordSelection extends AppCompatActivity {
 
         // pick next word from word list
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if(listView.getCheckedItemCount() == 0){
+
+            if(listView.getCheckedItemCount() == selected){
                 Toast.makeText(this, "Select atleast one word !!!", Toast.LENGTH_LONG).show();
             }
             else if(counter < wordList.size()) {
@@ -428,6 +435,8 @@ public class WordSelection extends AppCompatActivity {
                 wm = new WordModel(word);
                 titleView.setText(titlePrefix + " - " + word.toUpperCase());
                 counter++;
+                selected = listView.getCheckedItemCount();
+                nextButton.setEnabled(false);
 
             }
             else{
