@@ -109,14 +109,23 @@ public class WordSelection extends AppCompatActivity {
                 addBtn.setOnClickListener(new Button.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String newWord = addWord.getText().toString();
+                        String newWord = addWord.getText().toString().trim();
                         Log.d(TAG, newWord);
-                        words.add(newWord);
-                        adapter = new ArrayAdapter<String>(mContext,
-                                android.R.layout.simple_list_item_multiple_choice, words);
-                        listView.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
-                        addWord.setText("");
+                        if(newWord.equals("")){
+                            Toast.makeText(mContext, "blank is not a word :(", Toast.LENGTH_LONG).show();
+                        }
+                        else if(words.contains(newWord)){
+                            Toast.makeText(mContext, "Already exists !!", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            words.add(newWord);
+                            adapter = new ArrayAdapter<String>(mContext,
+                                    android.R.layout.simple_list_item_multiple_choice, words);
+                            listView.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                            addWord.setText("");
+                            Toast.makeText(mContext, "Added to list !!", Toast.LENGTH_LONG).show();
+                        }
                     }
                 });
 
