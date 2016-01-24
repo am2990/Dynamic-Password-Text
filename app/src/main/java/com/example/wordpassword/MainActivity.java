@@ -140,7 +140,7 @@ public class MainActivity extends Activity{
 					wordsList.removeAll(Collections.singleton(""));
 					System.out.println("hello from words list "+wordsList);
 					if( wordsList.size() < 3 ){
-						Toast.makeText(mContext, "Need mor words !!!", Toast.LENGTH_LONG).show();
+						Toast.makeText(mContext, "Need more words !!!", Toast.LENGTH_LONG).show();
 						return;
 					}
 

@@ -49,8 +49,8 @@ public class UsernameActivity extends ActionBarActivity {
 
                 final String u = username.getText().toString();
                 System.out.println("u: " + u);
-
-                user.setUsername(u);
+                if (!(u.equals(""))){
+                    user.setUsername(u);
                 //TODO the function name should be addUser
                 // db.addUsername(user);
 
@@ -60,10 +60,9 @@ public class UsernameActivity extends ActionBarActivity {
                     Intent intent = new Intent();
                     intent.setClass(UsernameActivity.this, MainActivity.class);
                     intent.putExtra("usern", u);
-                    intent.putExtra("checkuser",checkuser);
+                    intent.putExtra("checkuser", checkuser);
                     startActivity(intent);
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Login!", Toast.LENGTH_SHORT).show();
                     checkuser = "true";
                     String str_selected = db.getSelectedByName(u);
@@ -74,22 +73,26 @@ public class UsernameActivity extends ActionBarActivity {
                     int indexOfOpenBracket2 = str_notSelected.indexOf("[");
                     int indexOfLastBracket2 = str_notSelected.lastIndexOf("]");
 
-                    System.out.println("hhh: "+str_selected.substring(indexOfOpenBracket1+1, indexOfLastBracket1));
+                    System.out.println("hhh: " + str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1));
 
                     ArrayList<String> selected = new ArrayList<String>(Arrays.asList(str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1).split(",")));
-                    System.out.println("selected al:"+ selected);
+                    System.out.println("selected al:" + selected);
 
-                    ArrayList<String> notSelected = new ArrayList<String>(Arrays.asList(str_notSelected.substring(indexOfOpenBracket2+1, indexOfLastBracket2).split(",")));
+                    ArrayList<String> notSelected = new ArrayList<String>(Arrays.asList(str_notSelected.substring(indexOfOpenBracket2 + 1, indexOfLastBracket2).split(",")));
                     System.out.println("selected username: " + selected);
                     Intent intent = new Intent();
                     intent.setClass(UsernameActivity.this, SampleTagCloud.class);
                     intent.putExtra("usern", u);
-                    intent.putExtra("checkuser",checkuser);
+                    intent.putExtra("checkuser", checkuser);
                     intent.putStringArrayListExtra("selected", selected);
-                    intent.putStringArrayListExtra("notSelected",notSelected);
+                    intent.putStringArrayListExtra("notSelected", notSelected);
                     startActivity(intent);
                 }
             }
+                else{
+                    Toast.makeText(getApplicationContext(), "Enter a username", Toast.LENGTH_SHORT).show();
+                }
+        }
         });
     }
     @Override

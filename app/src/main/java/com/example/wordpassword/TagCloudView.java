@@ -41,7 +41,7 @@ public class TagCloudView extends RelativeLayout {
 	DatabaseHelper db;
 	User user = new User();
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
-		this(mContext, width, height, tagList, 6 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
+		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
 		System.out.println("checkuserintag: "+ checkuser);
 		System.out.println("selected tagcloudview: " + selected);
