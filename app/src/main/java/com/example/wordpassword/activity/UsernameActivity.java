@@ -90,7 +90,7 @@ public class UsernameActivity extends ActionBarActivity {
                 }
             }
                 else{
-                    Toast.makeText(getApplicationContext(), "Enter a username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Enter a username!!", Toast.LENGTH_SHORT).show();
                 }
         }
         });
