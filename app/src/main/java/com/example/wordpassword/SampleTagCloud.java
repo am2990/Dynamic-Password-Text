@@ -47,25 +47,25 @@ public class SampleTagCloud extends Activity {
 		Bundle extra = getIntent().getBundleExtra("extra");
 
 //		ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
-				iuser=getIntent();
+		iuser=getIntent();
 		icheckuser = getIntent();
 		iselected = getIntent();
 		inotSelected = getIntent();
 		checkuser = icheckuser.getStringExtra("checkuser");
 		str_usern = iuser.getStringExtra("usern");
-ArrayList<String> selected = new ArrayList<String>();
+		ArrayList<String> selected = new ArrayList<String>();
 		ArrayList<String> notSelected = new ArrayList<String>();
-				// get selected words array
-if(checkuser.equalsIgnoreCase("false")) {
-	selected = (ArrayList<String>) extra.getSerializable("selectedWordArrayList");
-	// get not selected words array
-	notSelected = (ArrayList<String>) extra.getSerializable("notSelectedWordArrayList");
-	System.out.println("selected sampletag: " + selected);
-	System.out.println("notselected sampletag: " + notSelected);
-}
+		// get selected words array
+		if(checkuser.equalsIgnoreCase("false")) {
+			selected = (ArrayList<String>) extra.getSerializable("selectedWordArrayList");
+			// get not selected words array
+			notSelected = (ArrayList<String>) extra.getSerializable("notSelectedWordArrayList");
+			System.out.println("selected sampletag: " + selected);
+			System.out.println("notselected sampletag: " + notSelected);
+		}
 		else{
-				selected = iselected.getStringArrayListExtra("selected");
-				notSelected = inotSelected.getStringArrayListExtra("notSelected");
+			selected = iselected.getStringArrayListExtra("selected");
+			notSelected = inotSelected.getStringArrayListExtra("notSelected");
 		}
 		ArrayList<String> wordList = new ArrayList<>();
 		ArrayList<String> removeselected = new ArrayList<>(selected);
@@ -73,7 +73,7 @@ if(checkuser.equalsIgnoreCase("false")) {
 		Random r = new Random();
 		int size = removeselected.size();
 		if( size > 3) {
-		// pick 3 words from selected list
+			// pick 3 words from selected list
 			for (int i = 0; i < size - 3; i++) {
 				int ran = r.nextInt(removeselected.size());
 				String word = removeselected.get(ran);

@@ -373,6 +373,7 @@ public class TagCloudView extends RelativeLayout {
 		return tempTagList;
 	}
 
+	int selectionCount = 0;
 	//for handling the click on the tags
 	//onclick open the tag url in a new window. Back button will bring you back to TagCloud
 	View.OnClickListener OnTagClickListener(final String url,final ArrayList<String> objects, final String checkuser, final String str_usern, final ArrayList<String> selected, final ArrayList<String> notSelected){
@@ -419,27 +420,21 @@ public class TagCloudView extends RelativeLayout {
 			}*/			    	
 				try{
 
-					Uri uri = Uri.parse( urlMaker(url) );
-					//String vs= uri.toString();
-					//System.out.println("yo yo"+ uri);
-					//TODO get the tag instance from mTagCloud
+					Uri uri = Uri.parse(urlMaker(url));
+
 					System.out.println("uri: "+uri.toString());
+					selectionCount++;
 					Tag tempTag = mTagCloud.getTag(uri.toString());
 					tempTag.toggle();
-//					Tag tempTag = new Tag();
-//					tempTag.toggle();
-//					tempTag.setText(uri.toString());
-					//List<?>=new ArrayList<?>;
-					//int[] myList;
 
 
-					System.out.println("temptag false-"+ tempTag.getText());
+//					System.out.println("temptag false-"+ tempTag.getText());
 //					tempTag.setColorR(56);tempTag.setColorB(70);tempTag.setColorG(239);
 //					mTagCloud.Replace(tempTag, uri.toString().trim());
 					//				
 					mTagCloud.update();
 
-					System.out.println("false");
+//					System.out.println("false");
 					System.out.println(objects);
 					System.out.println("flag"+ flag1);
 					int length=objects.size();
@@ -462,7 +457,7 @@ public class TagCloudView extends RelativeLayout {
 							flag1=true;
 							System.out.println("true"+ flag1);
 						}
-						else if(count1==length){
+						else if(count1==length && selectionCount == count1){
 							System.out.println("no need");
 							flag1=false;
 							System.out.println("false : "+ flag1);
@@ -473,6 +468,7 @@ public class TagCloudView extends RelativeLayout {
 
 
 						System.out.println("ok");
+						Toast.makeText(mContext, "Correct Password !!", Toast.LENGTH_LONG).show();
 						/*Intent intent = new Intent(mContext, NextActivity.class);
 						 intent.putExtra("aaa", "extra");
 						 startActivity(intent);*/
@@ -499,7 +495,7 @@ public class TagCloudView extends RelativeLayout {
 							/* ss=ss.concat(temp).concat(" ");
 							 String[] ary=ss.split(",");
 							 System.out.println("ary: "+ary);*/
-
+							selectionCount--;
 							count1--;
 							System.out.println("count1: "+ count1);
 
