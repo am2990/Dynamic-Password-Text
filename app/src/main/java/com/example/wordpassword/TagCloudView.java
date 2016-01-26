@@ -428,7 +428,7 @@ public class TagCloudView extends RelativeLayout {
 					Uri uri = Uri.parse(urlMaker(url));
 
 					System.out.println("uri: "+uri.toString());
-					selectionCount++;
+
 					Tag tempTag = mTagCloud.getTag(uri.toString());
 					tempTag.toggle();
 
@@ -443,15 +443,14 @@ public class TagCloudView extends RelativeLayout {
 					System.out.println(objects);
 					System.out.println("flag"+ flag1);
 					int length=objects.size();
-					System.out.println("length, selectionCount"+length+" , "+ selectionCount);
+					System.out.println("length"+length);
 					// for(int i=0;i<length; i++){
 					System.out.println("temp value"+ temp);
 					boolean setval = tempTag.isSelected();
 					if (tempTag.isSelected()){
+						selectionCount++;
 						if(objects.contains(temp)){
 							count1++;
-							System.out.println("count1: " + count1);
-
 
 							if(count1 < length){
 								flag1=true;
@@ -496,14 +495,16 @@ public class TagCloudView extends RelativeLayout {
 							System.out.println("not ok");
 
 						}
+						System.out.println("selected count1: " + count1 +"," + selectionCount);
 					}
 					else if(!(tempTag.isSelected())){
+						selectionCount--;
 
 						if(objects.contains(temp)){
 
-							selectionCount--;
+
 							count1--;
-							System.out.println("count1: "+ count1);
+
 
 
 						/*	if(count1 < length){
@@ -527,9 +528,7 @@ public class TagCloudView extends RelativeLayout {
 
 
 						}
-					/*	else{
-							System.out.println("ok");
-						}*/
+						System.out.println("unselected count1: " + count1 +"," + selectionCount);
 					}
 					//ArrayList<Object>=new ArrayList<Object>;
 					//Iterator<Object> itr = objects.iterator();
