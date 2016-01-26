@@ -40,6 +40,9 @@ public class TagCloudView extends RelativeLayout {
 	boolean flag1=true;
 	DatabaseHelper db;
 	User user = new User();
+
+	Intent calleeIntent = null;
+
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
 		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
@@ -49,8 +52,8 @@ public class TagCloudView extends RelativeLayout {
 		db = new DatabaseHelper(mContext);
 
 	}
-	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, 
-			int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
+	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList,
+						int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
 
 
 
@@ -71,10 +74,10 @@ public class TagCloudView extends RelativeLayout {
 
 		// initialize the TagCloud from a list of tags
 		//Filter() func. screens tagList and ignores Tags with same text (Case Insensitive)
-		mTagCloud = new TagCloud(Filter(tagList), (int) radius , 
-				textSizeMin, 
+		mTagCloud = new TagCloud(Filter(tagList), (int) radius ,
+				textSizeMin,
 				textSizeMax
-				);
+		);
 		float[] tempColor1 = {0.9412f,0.7686f,0.2f,1}; //rgb Alpha 
 		//{1f,0f,0f,1}  red       {0.3882f,0.21568f,0.0f,1} orange
 		//{0.9412f,0.7686f,0.2f,1} light orange
@@ -102,30 +105,30 @@ public class TagCloudView extends RelativeLayout {
 		int i=0;
 
 		while (it.hasNext()){
-			tempTag= (Tag) it.next();              
+			tempTag= (Tag) it.next();
 			tempTag.setParamNo(i); //store the parameter No. related to this tag
 
 			mTextView.add(new TextView(this.mContext));
 			mTextView.get(i).setText(tempTag.getText());
 
 			mParams.add(new RelativeLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT,  
-					LayoutParams.WRAP_CONTENT
+							LayoutParams.WRAP_CONTENT,
+							LayoutParams.WRAP_CONTENT
 					)
-					);  
+			);
 			mParams.get(i).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 			mParams.get(i).addRule(RelativeLayout.ALIGN_PARENT_TOP);
-			mParams.get(i).setMargins(	
-					(int) (centerX -shiftLeft + tempTag.getLoc2DX()), 
-					(int) (centerY + tempTag.getLoc2DY()), 
-					0, 
+			mParams.get(i).setMargins(
+					(int) (centerX -shiftLeft + tempTag.getLoc2DX()),
+					(int) (centerY + tempTag.getLoc2DY()),
+					0,
 					0);
 			mTextView.get(i).setLayoutParams(mParams.get(i));
 
 			mTextView.get(i).setSingleLine(true);
-			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
-					(int)	(tempTag.getColorR() * 255), 
-					(int)	(tempTag.getColorG() * 255), 
+			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255),
+					(int)	(tempTag.getColorR() * 255),
+					(int)	(tempTag.getColorG() * 255),
 					(int) (tempTag.getColorB() * 255));
 			mTextView.get(i).setTextColor(mergedColor);
 			mTextView.get(i).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
@@ -138,7 +141,9 @@ public class TagCloudView extends RelativeLayout {
 	}
 
 
-
+	public void setCalleeIntent(Intent i){
+		this.calleeIntent = i;
+	}
 
 	@Override
 	protected void onDraw(Canvas canvas){
@@ -149,29 +154,29 @@ public class TagCloudView extends RelativeLayout {
 		mTagCloud.add(newTag);
 
 		int i= mTextView.size();
-		newTag.setParamNo(i); 
+		newTag.setParamNo(i);
 
 		mTextView.add(new TextView(this.mContext));
 		mTextView.get(i).setText(newTag.getText());
 
 		mParams.add(new RelativeLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT,  
-				LayoutParams.WRAP_CONTENT
+						LayoutParams.WRAP_CONTENT,
+						LayoutParams.WRAP_CONTENT
 				)
-				);  
+		);
 		mParams.get(i).addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		mParams.get(i).addRule(RelativeLayout.ALIGN_PARENT_TOP);
-		mParams.get(i).setMargins(	
-				(int) (centerX -shiftLeft + newTag.getLoc2DX()), 
-				(int) (centerY + newTag.getLoc2DY()), 
-				0, 
+		mParams.get(i).setMargins(
+				(int) (centerX -shiftLeft + newTag.getLoc2DX()),
+				(int) (centerY + newTag.getLoc2DY()),
+				0,
 				0);
 		mTextView.get(i).setLayoutParams(mParams.get(i));
 
 		mTextView.get(i).setSingleLine(true);
-		int mergedColor = Color.argb( (int)	(newTag.getAlpha() * 255), 
-				(int)	(newTag.getColorR() * 255), 
-				(int)	(newTag.getColorG() * 255), 
+		int mergedColor = Color.argb( (int)	(newTag.getAlpha() * 255),
+				(int)	(newTag.getColorR() * 255),
+				(int)	(newTag.getColorG() * 255),
 				(int) (newTag.getColorB() * 255));
 		mTextView.get(i).setTextColor(mergedColor);
 		mTextView.get(i).setTextSize((int)(newTag.getTextSize() * newTag.getScale()));
@@ -186,16 +191,16 @@ public class TagCloudView extends RelativeLayout {
 			Iterator<?> it=mTagCloud.iterator();
 			Tag tempTag;
 			while (it.hasNext()){
-				tempTag= (Tag) it.next();              
-				mParams.get(tempTag.getParamNo()).setMargins(	
-						(int) (centerX -shiftLeft+ tempTag.getLoc2DX()), 
-						(int) (centerY + tempTag.getLoc2DY()), 
-						0, 
+				tempTag= (Tag) it.next();
+				mParams.get(tempTag.getParamNo()).setMargins(
+						(int) (centerX -shiftLeft+ tempTag.getLoc2DX()),
+						(int) (centerY + tempTag.getLoc2DY()),
+						0,
 						0);
 				mTextView.get(tempTag.getParamNo()).setText(tempTag.getText());
 				mTextView.get(tempTag.getParamNo()).setTextSize(
 						(int)(tempTag.getTextSize() * tempTag.getScale()));
-				int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
+				int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255),
 						(int)	(tempTag.getColorR() * 255),
 						(int)	(tempTag.getColorG() * 255),
 						(int) (tempTag.getColorB() * 255));
@@ -203,7 +208,7 @@ public class TagCloudView extends RelativeLayout {
 				mTextView.get(tempTag.getParamNo()).bringToFront();
 			}
 			result=true;
-		} 
+		}
 		return result;
 	}
 
@@ -213,16 +218,16 @@ public class TagCloudView extends RelativeLayout {
 		Iterator<?> it=mTagCloud.iterator();
 		Tag tempTag;
 		while (it.hasNext()){
-			tempTag= (Tag) it.next();              
-			mParams.get(tempTag.getParamNo()).setMargins(	
-					(int) (centerX -shiftLeft+ tempTag.getLoc2DX()), 
-					(int) (centerY + tempTag.getLoc2DY()), 
-					0, 
+			tempTag= (Tag) it.next();
+			mParams.get(tempTag.getParamNo()).setMargins(
+					(int) (centerX -shiftLeft+ tempTag.getLoc2DX()),
+					(int) (centerY + tempTag.getLoc2DY()),
+					0,
 					0);
 			mTextView.get(tempTag.getParamNo()).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
-			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
-					(int)	(tempTag.getColorR() * 255), 
-					(int)	(tempTag.getColorG() * 255), 
+			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255),
+					(int)	(tempTag.getColorR() * 255),
+					(int)	(tempTag.getColorG() * 255),
 					(int) (tempTag.getColorB() * 255));
 			mTextView.get(tempTag.getParamNo()).setTextColor(mergedColor);
 			mTextView.get(tempTag.getParamNo()).bringToFront();
@@ -244,16 +249,16 @@ public class TagCloudView extends RelativeLayout {
 		Iterator<?> it=mTagCloud.iterator();
 		Tag tempTag;
 		while (it.hasNext()){
-			tempTag= (Tag) it.next();              
-			mParams.get(tempTag.getParamNo()).setMargins(	
-					(int) (centerX -shiftLeft+ tempTag.getLoc2DX()), 
-					(int) (centerY + tempTag.getLoc2DY()), 
-					0, 
+			tempTag= (Tag) it.next();
+			mParams.get(tempTag.getParamNo()).setMargins(
+					(int) (centerX -shiftLeft+ tempTag.getLoc2DX()),
+					(int) (centerY + tempTag.getLoc2DY()),
+					0,
 					0);
 			mTextView.get(tempTag.getParamNo()).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
-			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
-					(int)	(tempTag.getColorR() * 255), 
-					(int)	(tempTag.getColorG() * 255), 
+			int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255),
+					(int)	(tempTag.getColorR() * 255),
+					(int)	(tempTag.getColorG() * 255),
 					(int) (tempTag.getColorB() * 255));
 			mTextView.get(tempTag.getParamNo()).setTextColor(mergedColor);
 			mTextView.get(tempTag.getParamNo()).bringToFront();
@@ -267,38 +272,38 @@ public class TagCloudView extends RelativeLayout {
 		float y = e.getY();
 
 		switch (e.getAction()) {
-		case MotionEvent.ACTION_MOVE:	
-			//rotate elements depending on how far the selection point is from center of cloud
-			float dx = x - centerX;
-			float dy = y - centerY;
-			mAngleX = ( dy/radius) *tspeed * TOUCH_SCALE_FACTOR;
-			mAngleY = (-dx/radius) *tspeed * TOUCH_SCALE_FACTOR;
+			case MotionEvent.ACTION_MOVE:
+				//rotate elements depending on how far the selection point is from center of cloud
+				float dx = x - centerX;
+				float dy = y - centerY;
+				mAngleX = ( dy/radius) *tspeed * TOUCH_SCALE_FACTOR;
+				mAngleY = (-dx/radius) *tspeed * TOUCH_SCALE_FACTOR;
 
-			mTagCloud.setAngleX(mAngleX);
-			mTagCloud.setAngleY(mAngleY);
-			mTagCloud.update();
+				mTagCloud.setAngleX(mAngleX);
+				mTagCloud.setAngleY(mAngleY);
+				mTagCloud.update();
 
-			Iterator<?> it=mTagCloud.iterator();
-			Tag tempTag;
-			while (it.hasNext()){
-				tempTag= (Tag) it.next();              
-				mParams.get(tempTag.getParamNo()).setMargins(	
-						(int) (centerX -shiftLeft + tempTag.getLoc2DX()), 
-						(int) (centerY + tempTag.getLoc2DY()), 
-						0, 
-						0);
-				mTextView.get(tempTag.getParamNo()).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
-				int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255), 
-						(int)	(tempTag.getColorR() * 255), 
-						(int)	(tempTag.getColorG() * 255), 
-						(int) (tempTag.getColorB() * 255));
-				mTextView.get(tempTag.getParamNo()).setTextColor(mergedColor);
-				mTextView.get(tempTag.getParamNo()).bringToFront();
+				Iterator<?> it=mTagCloud.iterator();
+				Tag tempTag;
+				while (it.hasNext()){
+					tempTag= (Tag) it.next();
+					mParams.get(tempTag.getParamNo()).setMargins(
+							(int) (centerX -shiftLeft + tempTag.getLoc2DX()),
+							(int) (centerY + tempTag.getLoc2DY()),
+							0,
+							0);
+					mTextView.get(tempTag.getParamNo()).setTextSize((int)(tempTag.getTextSize() * tempTag.getScale()));
+					int mergedColor = Color.argb( (int)	(tempTag.getAlpha() * 255),
+							(int)	(tempTag.getColorR() * 255),
+							(int)	(tempTag.getColorG() * 255),
+							(int) (tempTag.getColorB() * 255));
+					mTextView.get(tempTag.getParamNo()).setTextColor(mergedColor);
+					mTextView.get(tempTag.getParamNo()).bringToFront();
 
 
-			}
+				}
 
-			break;
+				break;
 			/*case MotionEvent.ACTION_UP:  //now it is clicked!!!!		
 			dx = x - centerX;
 			dy = y - centerY;			
@@ -344,7 +349,7 @@ public class TagCloudView extends RelativeLayout {
 		List<Tag> tempTagList=new ArrayList<Tag>();
 		Iterator<Tag> itr = tagList.iterator();
 		Iterator<Tag> itrInternal;
-		Tag tempTag1, tempTag2;	    
+		Tag tempTag1, tempTag2;
 		//for all elements of TagList
 		while (itr.hasNext()){
 
@@ -355,12 +360,12 @@ public class TagCloudView extends RelativeLayout {
 			itrInternal = tempTagList.iterator();
 			while (itrInternal.hasNext()){
 
-				tempTag2 = (itrInternal.next());  	    	
+				tempTag2 = (itrInternal.next());
 				if (tempTag2.getText().equalsIgnoreCase(tempTag1.getText())){
 
 
 					found = true;
-					break;   	    		
+					break;
 				}
 
 
@@ -417,7 +422,7 @@ public class TagCloudView extends RelativeLayout {
 					arr[ii]=url;
 					System.out.println("array url"+arr[ii]);
 				}
-			}*/			    	
+			}*/
 				try{
 
 					Uri uri = Uri.parse(urlMaker(url));
@@ -438,63 +443,64 @@ public class TagCloudView extends RelativeLayout {
 					System.out.println(objects);
 					System.out.println("flag"+ flag1);
 					int length=objects.size();
-					System.out.println("lenght"+length);
+					System.out.println("length, selectionCount"+length+" , "+ selectionCount);
 					// for(int i=0;i<length; i++){
 					System.out.println("temp value"+ temp);
 					boolean setval = tempTag.isSelected();
 					if (tempTag.isSelected()){
-					if(objects.contains(temp)){
-
-						/* ss=ss.concat(temp).concat(" ");
-						 String[] ary=ss.split(",");
-						 System.out.println("ary: "+ary);*/
-
-						count1++;
-						System.out.println("count1: "+ count1);
+						if(objects.contains(temp)){
+							count1++;
+							System.out.println("count1: " + count1);
 
 
-						if(count1 < length){
-							flag1=true;
-							System.out.println("true"+ flag1);
+							if(count1 < length){
+								flag1=true;
+								System.out.println("true" + flag1);
+							}
+							else if(count1==length && selectionCount == count1){
+								System.out.println("no need");
+								flag1=false;
+								System.out.println("false : "+ flag1);
+							}
 						}
-						else if(count1==length && selectionCount == count1){
-							System.out.println("no need");
-							flag1=false;
-							System.out.println("false : "+ flag1);
+						else if( selectionCount > length){
+							Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
+							selectionCount = 0;
+							count1 = 0;
+							flag1 = true;
+							reset();
 						}
-					} 
 
-					if(flag1== false){
+						if(flag1== false){
 
 
-						System.out.println("ok");
-						Toast.makeText(mContext, "Correct Password !!", Toast.LENGTH_LONG).show();
+							System.out.println("ok");
+							Toast.makeText(mContext, "Correct Password !!", Toast.LENGTH_LONG).show();
 						/*Intent intent = new Intent(mContext, NextActivity.class);
 						 intent.putExtra("aaa", "extra");
 						 startActivity(intent);*/
-						if(checkuser.equalsIgnoreCase("false")){
+							if(checkuser.equalsIgnoreCase("false")){
 
-							user.setUsername(str_usern);
-							user.setNselected(notSelected.toString());
-							user.setSelected(selected.toString());
-							System.out.println("selected tagcloudview 1: " + selected.toString());
-							System.out.println("not selected tagcloudview 1: "+ notSelected.toString());
-							db.addUser(user);
+								user.setUsername(str_usern);
+								user.setNselected(notSelected.toString());
+								user.setSelected(selected.toString());
+								System.out.println("selected tagcloudview 1: " + selected.toString());
+								System.out.println("not selected tagcloudview 1: "+ notSelected.toString());
+								db.addUser(user);
+							}
+
+							callNextAct();
+
 						}
+						else{
+							System.out.println("not ok");
 
-						callNextAct();
-
+						}
 					}
-					else{
-						System.out.println("not ok");
-					}
-				}
 					else if(!(tempTag.isSelected())){
+
 						if(objects.contains(temp)){
 
-							/* ss=ss.concat(temp).concat(" ");
-							 String[] ary=ss.split(",");
-							 System.out.println("ary: "+ary);*/
 							selectionCount--;
 							count1--;
 							System.out.println("count1: "+ count1);
@@ -518,7 +524,7 @@ public class TagCloudView extends RelativeLayout {
 							/*Intent intent = new Intent(mContext, NextActivity.class);
 							 intent.putExtra("aaa", "extra");
 							 startActivity(intent);*/
-							
+
 
 						}
 					/*	else{
@@ -581,11 +587,6 @@ public class TagCloudView extends RelativeLayout {
 				}
 				catch(Exception e){
 					Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
-
-
-
-
-					//System.out.println("wrong word chosen");
 					System.out.println(e);
 				}
 

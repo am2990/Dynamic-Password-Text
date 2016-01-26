@@ -104,11 +104,6 @@ public class SampleTagCloud extends Activity {
 		int width = display.getWidth();
 		int height = display.getHeight();
 
-
-
-
-
-
 		//Step2: create the required TagList:
 		//notice: All tags must have unique text field
 		//if not, only the first occurrence will be added and the rest will be ignored
