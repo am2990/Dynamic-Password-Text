@@ -28,7 +28,6 @@ public class SampleTagCloud extends Activity {
 
 	private final String TAG = "SampleTagCloud";
 
-
 	String str1="";
 	String stritr;
 	int g=0;
@@ -45,6 +44,8 @@ public class SampleTagCloud extends Activity {
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		Bundle extra = getIntent().getBundleExtra("extra");
+
+		Boolean signUp = getIntent().getBooleanExtra("SIGN_UP", false);
 
 //		ArrayList<String> objects = (ArrayList<String>) extra.getSerializable("wordArrayList");
 		iuser=getIntent();
@@ -112,7 +113,7 @@ public class SampleTagCloud extends Activity {
 
 
 		//Step3: create our TagCloudview and set it as the content of our MainActivity
-		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList, checkuser, str_usern, selected, notSelected ); //passing current context
+		mTagCloudView = new TagCloudView(this, width, height, myTagList, wordList, checkuser, str_usern, selected, notSelected, signUp ); //passing current context
 		System.out.println("value for objects: "+wordList);
 		setContentView(mTagCloudView);
 		mTagCloudView.requestFocus();
@@ -230,5 +231,6 @@ public class SampleTagCloud extends Activity {
 	}
 
 	private TagCloudView mTagCloudView;
+
 
 }

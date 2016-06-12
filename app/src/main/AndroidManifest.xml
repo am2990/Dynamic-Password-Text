@@ -14,6 +14,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <permission android:name="com.example.wordpassword.READ_DATABASE"
+        android:protectionLevel="normal"/>
+    <permission android:name="com.example.wordpassword.WRITE_DATABASE"
+        android:protectionLevel="normal"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -69,6 +74,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.wordpassword.activity.TypeSelectionActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.example.wordpassword.provider"
+            android:name=".framework.CustomContentProvider"
+            android:exported="true"
+            android:readPermission="com.example.wordpassword.READ_DATABASE"
+            android:writePermission="com.example.wordpassword.WRITE_DATABASE"
+            />
 
     </application>
 </manifest>

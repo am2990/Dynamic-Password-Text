@@ -6,6 +6,7 @@ package com.example.wordpassword;
  */
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +18,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -28,6 +30,14 @@ import com.example.wordpassword.db.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
 public class TagCloudView extends RelativeLayout {
+
+	private static final String TAG = TagCloudView.class.getSimpleName();
+
+	private Boolean signUp = false;
+
+	private long endSignUpTime;
+	private long endLoginTime;
+
 	RelativeLayout navigation_bar;
 	TextView mTextView1;
 	int count = 0;
@@ -43,8 +53,8 @@ public class TagCloudView extends RelativeLayout {
 
 	Intent calleeIntent = null;
 
-	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
-		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected); //default for min/max text size
+	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected, Boolean signUp) {
+		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected, signUp); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
 		System.out.println("checkuserintag: "+ checkuser);
 		System.out.println("selected tagcloudview: " + selected);
@@ -53,11 +63,13 @@ public class TagCloudView extends RelativeLayout {
 
 	}
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList,
-						int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected) {
-
-
+						int textSizeMin, int textSizeMax, int scrollSpeed, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected, Boolean signUp) {
 
 		super(mContext);
+		this.signUp = signUp;
+
+		Log.v(TAG,"signUp: "+signUp);
+
 		this.mContext= mContext;
 		this.textSizeMin = textSizeMin;
 		this.textSizeMax= textSizeMax;
@@ -463,7 +475,20 @@ public class TagCloudView extends RelativeLayout {
 							}
 						}
 						else if( selectionCount > length){
+
+							if(signUp) {
+								// user is signing up but got the password wrong
+							}
+							else {
+								// user is signing in but got the password wrong
+								//update failed login attempts
+								UsernameActivity.stopScreenSharing();
+								UsernameActivity.contentProviderHelper.updateFailedLoginAttempts(getContext(),
+										str_usern);
+							}
+
 							Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
+							Log.v(TAG,"selectionCount > length");
 							selectionCount = 0;
 							count1 = 0;
 							flag1 = true;
@@ -475,9 +500,34 @@ public class TagCloudView extends RelativeLayout {
 
 							System.out.println("ok");
 							Toast.makeText(mContext, "Correct Password !!", Toast.LENGTH_LONG).show();
+
+							if(signUp) {
+								// user is signing up
+								endSignUpTime = Calendar.getInstance().getTimeInMillis();
+								long totalSignUpTime = endSignUpTime - UsernameActivity.startTime;
+								Log.v(TAG,"totalSignUpTime: "+totalSignUpTime);
+
+								UsernameActivity.contentProviderHelper.insertSignUpTime(getContext(), String.valueOf(totalSignUpTime));
+
+								UsernameActivity.stopScreenSharing();
+							}
+							else {
+								// user is signing in
+								endLoginTime = Calendar.getInstance().getTimeInMillis();
+
+								long totalLoginTime = endLoginTime - UsernameActivity.startTime;
+								Log.v(TAG,"Total login time: "+totalLoginTime);
+
+								UsernameActivity.contentProviderHelper.updateLoginSuccessCounter(getContext(), str_usern);
+								UsernameActivity.contentProviderHelper.updateMeanLoginTime(getContext(), str_usern, totalLoginTime);
+
+								UsernameActivity.stopScreenSharing();
+							}
+
 						/*Intent intent = new Intent(mContext, NextActivity.class);
 						 intent.putExtra("aaa", "extra");
 						 startActivity(intent);*/
+
 							if(checkuser.equalsIgnoreCase("false")){
 
 								user.setUsername(str_usern);
@@ -582,8 +632,9 @@ public class TagCloudView extends RelativeLayout {
 				*/
 				}
 				catch(Exception e){
-					Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
+					Toast.makeText(mContext,"WRONG SELECTION !!", Toast.LENGTH_SHORT).show();
 					System.out.println(e);
+					Log.v(TAG,"exception wrong selection");
 				}
 
 

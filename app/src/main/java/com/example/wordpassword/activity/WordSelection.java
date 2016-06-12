@@ -441,6 +441,7 @@ public class WordSelection extends AppCompatActivity {
                 extra.putSerializable("selectedWordArrayList", selectedWords);
                 extra.putSerializable("notSelectedWordArrayList", notSelectedWords);
                 Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
+                intent.putExtra("SIGN_UP",true);
                 intent.putExtra("extra", extra);
                 intent.putExtra("usern",str_usern);
                 intent.putExtra("checkuser", checkuser);
