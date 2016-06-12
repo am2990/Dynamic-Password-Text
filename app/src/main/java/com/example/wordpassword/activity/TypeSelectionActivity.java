@@ -21,6 +21,7 @@ public class TypeSelectionActivity extends AppCompatActivity {
     Bundle extra;
     Intent iuser,icheckuser;
     String str_usern,checkuser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,8 +58,6 @@ public class TypeSelectionActivity extends AppCompatActivity {
             startActivity(intent);
             // send him to first screen again
         }
-
-
     }
 
     public void onRadioButtonClicked(View view) {

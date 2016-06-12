@@ -66,7 +66,6 @@ public class WordSelection extends AppCompatActivity {
     ArrayList<String> selectedWords, notSelectedWords, wordList;
     HashMap<String, WordModel> word_hm = new HashMap<>();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +81,6 @@ public class WordSelection extends AppCompatActivity {
         setSupportActionBar(toolbar);
         iuser=getIntent();
         icheckuser = getIntent();
-
 
         checkuser = icheckuser.getStringExtra("checkuser");
         str_usern = iuser.getStringExtra("usern");
@@ -341,7 +339,6 @@ public class WordSelection extends AppCompatActivity {
                 Log.d(TAG, "HM:SI" + wm.getWordList(3, curr_word) + " size" + wm.getWordList(3, curr_word).length);
                 e.printStackTrace();
             }
-
         }
 
         protected void onPostExecute(Boolean result) {
@@ -358,8 +355,6 @@ public class WordSelection extends AppCompatActivity {
 //            listView.setItemChecked(1,true);
             word_hm.put(curr_word, wm);
             nextButton.setEnabled(true);
-
-
         }
 
         public String GET(String urls) {
@@ -400,9 +395,7 @@ public class WordSelection extends AppCompatActivity {
 
             inputStream.close();
             return result;
-
         }
-
     }
 
     int selected = 0;
@@ -455,7 +448,6 @@ public class WordSelection extends AppCompatActivity {
 
             }
         }
-
         // call the async task with next word if word list empty then send to next activity
     }
 

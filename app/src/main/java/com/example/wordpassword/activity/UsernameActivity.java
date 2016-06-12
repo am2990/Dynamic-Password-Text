@@ -31,15 +31,14 @@ public class UsernameActivity extends ActionBarActivity {
     private DatabaseHelper db;
    // boolean checkuser;
     String checkuser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.username_layout);
 
-
         username = (EditText) findViewById(R.id.username);
         bcontinue = (Button) findViewById(R.id.bcontinue);
-
 
         db = new DatabaseHelper(this);
 

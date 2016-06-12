@@ -32,12 +32,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Table Names
     private static final String TABLE_WORDPIN = "wordpin_table";
 
-
     private static final String KEY_ID = "_id"; //primary key
     private static final String KEY_CREATED_AT = "created_at";
-
-
-
 
     private static final String KEY_SENTENCE = "sentence";
     private static final String KEY_TRIMMED_SENTENCE = "trimmed_sentence";
@@ -46,30 +42,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_ANTONYM_LIST = "ant_list";
     private static final String KEY_SIM_LIST = "sim_list";
 
-
     private static final String KEY_USERNAME = "username";
     private static final String KEY_SELECTED = "selected";
     private static final String KEY_NSELECTED = "nselected";
-
-
-
-
-
-
 
     // Table Create Statements
     // t_login table create statement
     private static final String CREATE_TABLE_t_login = "CREATE TABLE "
             + TABLE_WORDPIN + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_USERNAME + " VARCHAR," + KEY_SELECTED + " VARCHAR," + KEY_NSELECTED + " VARCHAR " + " )";
 
-
-
-
-
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
-
     }
 
     @Override
@@ -78,10 +61,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // creating required tables
         db.execSQL(CREATE_TABLE_t_login);
 
-
         Log.d(TAG, "creating tables");
-
     }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // on upgrade drop older tables
@@ -108,7 +90,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean getUserByName(String username) {
-
         SQLiteDatabase db = this.getReadableDatabase();
         System.out.println("username: "+ username);
         String selectString = "SELECT * FROM " + TABLE_WORDPIN + " WHERE " + KEY_USERNAME + " =?";
@@ -125,9 +106,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         else
             return false;
-
-
     }
+
     public String getSelectedByName(String username){
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -141,8 +121,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //System.out.println("usern db: "+ usern);
         // return contact
         return selected;
-
     }
+
     public String getNselectedByName(String username){
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -156,9 +136,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //System.out.println("usern db: "+ usern);
         // return contact
         return notSelected;
-
     }
-//
 //
 //    public String getPassByName(String username){
 //        SQLiteDatabase db = this.getReadableDatabase();
@@ -180,11 +158,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 //
 //        ContentValues values = new ContentValues();
 //        values.put(KEY_WRONGTRY, wrongtry);
-//        // values.put(KEY_STATUS, todo.getStatus());
+//        // values.put(KEY_STATUS,
 //        System.out.println("wrontrydb: "+ wrongtry);
 //        // updating row
 //        return db.update(TABLE_NUMPIN, values, KEY_USERNAME + " = ?",
 //                new String[] { username });
-//
 //    }
 }

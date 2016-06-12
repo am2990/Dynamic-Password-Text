@@ -521,10 +521,7 @@ public class TagCloudView extends RelativeLayout {
 						if(flag1== false){
 
 
-							System.out.println("not ok");
-							/*Intent intent = new Intent(mContext, NextActivity.class);
-							 intent.putExtra("aaa", "extra");
-							 startActivity(intent);*/
+							System.out.println("not ok");*/
 
 
 						}
