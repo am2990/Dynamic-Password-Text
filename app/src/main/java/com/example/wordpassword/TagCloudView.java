@@ -478,13 +478,13 @@ public class TagCloudView extends RelativeLayout {
 
 							if(signUp) {
 								// user is signing up but got the password wrong
+								CSVeditor.shared().setSuccessLogin(false);
 							}
 							else {
 								// user is signing in but got the password wrong
 								//update failed login attempts
 								UsernameActivity.stopScreenSharing();
-								UsernameActivity.contentProviderHelper.updateFailedLoginAttempts(getContext(),
-										str_usern);
+								CSVeditor.shared().setSuccessLogin(false);
 							}
 
 							Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
@@ -503,23 +503,23 @@ public class TagCloudView extends RelativeLayout {
 
 							if(signUp) {
 								// user is signing up
-								endSignUpTime = Calendar.getInstance().getTimeInMillis();
-								long totalSignUpTime = endSignUpTime - UsernameActivity.startTime;
-								Log.v(TAG,"totalSignUpTime: "+totalSignUpTime);
 
-								UsernameActivity.contentProviderHelper.insertSignUpTime(getContext(), String.valueOf(totalSignUpTime));
+								long timeSpent = Calendar.getInstance().getTimeInMillis() - SampleTagCloud.startTimeAtSampleTagCloud;
+								CSVeditor.shared().recordTimeStamp(timeSpent, 9);
+								long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
+								CSVeditor.shared().recordTimeStamp(totalTimeSpent, 10);
 
 								UsernameActivity.stopScreenSharing();
 							}
 							else {
 								// user is signing in
-								endLoginTime = Calendar.getInstance().getTimeInMillis();
 
-								long totalLoginTime = endLoginTime - UsernameActivity.startTime;
-								Log.v(TAG,"Total login time: "+totalLoginTime);
+								long timeSpent = Calendar.getInstance().getTimeInMillis() - SampleTagCloud.startTimeAtSampleTagCloud;
+								CSVeditor.shared().recordTimeStamp(timeSpent, 9);
+								long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
+								CSVeditor.shared().recordTimeStamp(totalTimeSpent, 10);
 
-								UsernameActivity.contentProviderHelper.updateLoginSuccessCounter(getContext(), str_usern);
-								UsernameActivity.contentProviderHelper.updateMeanLoginTime(getContext(), str_usern, totalLoginTime);
+								CSVeditor.shared().setSuccessLogin(true);
 
 								UsernameActivity.stopScreenSharing();
 							}
@@ -669,4 +669,6 @@ public class TagCloudView extends RelativeLayout {
 	private List<TextView> mTextView;
 	private List<RelativeLayout.LayoutParams> mParams;
 	private int shiftLeft;
+
+
 }

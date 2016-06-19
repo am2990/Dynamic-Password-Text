@@ -10,10 +10,12 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.example.wordpassword.CSVeditor;
 import com.example.wordpassword.R;
 import com.example.wordpassword.util.Constants;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TypeSelectionActivity extends AppCompatActivity {
 
@@ -90,7 +92,17 @@ public class TypeSelectionActivity extends AppCompatActivity {
         intent.putExtra("extra", extra);
         intent.putExtra("usern",str_usern);
         intent.putExtra("checkuser", checkuser);
+
+        long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+        CSVeditor.shared().recordTimeStamp(timeSpent, 7);
+
         startActivity(intent);
     }
 
+    long startTime;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = Calendar.getInstance().getTimeInMillis();
+    }
 }

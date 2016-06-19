@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -160,6 +161,9 @@ public class MainActivity extends Activity{
 				intent.putExtra("usern",str_usern);
 				intent.putExtra("checkuser", checkuser);
 
+				long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+				CSVeditor.shared().recordTimeStamp(spentTime,6);
+
 				startActivity(intent);
 
 			}
@@ -266,4 +270,10 @@ public class MainActivity extends Activity{
 		return super.onOptionsItemSelected(item);
 	}
 
+	long startTime;
+	@Override
+	protected void onResume() {
+		super.onResume();
+		startTime = Calendar.getInstance().getTimeInMillis();
+	}
 }

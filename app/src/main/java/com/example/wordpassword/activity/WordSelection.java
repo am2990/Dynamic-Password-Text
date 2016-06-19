@@ -25,6 +25,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordpassword.CSVeditor;
 import com.example.wordpassword.R;
 import com.example.wordpassword.SampleTagCloud;
 import com.example.wordpassword.util.Constants;
@@ -43,6 +44,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class WordSelection extends AppCompatActivity {
@@ -445,6 +447,10 @@ public class WordSelection extends AppCompatActivity {
                 intent.putExtra("extra", extra);
                 intent.putExtra("usern",str_usern);
                 intent.putExtra("checkuser", checkuser);
+
+                long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+                CSVeditor.shared().recordTimeStamp(timeSpent, 8);
+
                 startActivity(intent);
 
             }
@@ -458,4 +464,10 @@ public class WordSelection extends AppCompatActivity {
         startActivity(intent);
     }
 
+    long startTime;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = Calendar.getInstance().getTimeInMillis();
+    }
 }

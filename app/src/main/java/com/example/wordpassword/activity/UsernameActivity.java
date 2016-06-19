@@ -11,11 +11,7 @@ import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -24,21 +20,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.wordpassword.CSVeditor;
 import com.example.wordpassword.MainActivity;
 import com.example.wordpassword.R;
 import com.example.wordpassword.SampleTagCloud;
 import com.example.wordpassword.db.DatabaseHelper;
-import com.example.wordpassword.framework.ContentProviderHelper;
 import com.example.wordpassword.util.User;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class UsernameActivity extends ActionBarActivity {
@@ -67,7 +61,6 @@ public class UsernameActivity extends ActionBarActivity {
 
     // for recording the time user takes to signup : start time
     public static long startTime;
-    public static ContentProviderHelper contentProviderHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +69,8 @@ public class UsernameActivity extends ActionBarActivity {
 
         init();
 
-        contentProviderHelper = new ContentProviderHelper();
+        CSVeditor.shared().init(getApplicationContext());
+
         final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyyyyhhmmss");
 
         username = (EditText) findViewById(R.id.username);
@@ -102,13 +96,16 @@ public class UsernameActivity extends ActionBarActivity {
 
                     String timeStamp = simpleDateFormat.format(new Date());
 
-                    String location = Environment.getExternalStoragePublicDirectory(Environment
-                            .DIRECTORY_DOWNLOADS)+"/"+u+"_"+timeStamp+"_word_sign_up.mp4";
+                    String location = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            "/UserStudyFramework/"+
+                            u+ "_"+timeStamp+
+                            "_num_sign_up.mp4";
 
                     initRecorder(location);
 
-                    // insert username in column 1 of contentProvider database
-                    contentProviderHelper.insertNewUser(getApplicationContext(), u, location);
+                    long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+
+                    CSVeditor.shared().insertNewUser(u,u+"_"+timeStamp+"_word_sign_up.mp4",timeSpent);
 
                     Toast.makeText(UsernameActivity.this, "started", Toast.LENGTH_SHORT).show();
                     shareScreen();
@@ -124,13 +121,17 @@ public class UsernameActivity extends ActionBarActivity {
 
                     String timeStamp = simpleDateFormat.format(new Date());
 
-                    String location = Environment.getExternalStoragePublicDirectory(Environment
-                            .DIRECTORY_DOWNLOADS)+"/"+u+"_"+timeStamp+"_word_sign_in.mp4";
+                    String location = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            "/UserStudyFramework/"+
+                            u+ "_"+timeStamp+
+                            "_num_sign_in.mp4";
+
                     initRecorder(location);
 
                     shareScreen();
 
-                    contentProviderHelper.insertSignInVideo(getApplicationContext(), u, location);
+                    long timeSpent = Calendar.getInstance().getTimeInMillis() - startTime;
+                    CSVeditor.shared().insertSignInLog(u,u+"_"+timeStamp+"_word_sign_in.mp4", timeSpent);
 
                     checkuser = "true";
                     String str_selected = db.getSelectedByName(u);

@@ -5,6 +5,7 @@ package com.example.wordpassword;
  * @authors Reza Shiftehfar, Sara Khosravinasr and Jorge Silva
  */
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -137,8 +138,10 @@ public class SampleTagCloud extends Activity {
 		//result will be true if "google" was found and replaced. else result is false
 	}
 
+	static long startTimeAtSampleTagCloud;
 	protected void onResume() {
 		super.onResume();
+		startTimeAtSampleTagCloud = Calendar.getInstance().getTimeInMillis();
 	}
 
 	protected void onPause() {
@@ -231,6 +234,8 @@ public class SampleTagCloud extends Activity {
 	}
 
 	private TagCloudView mTagCloudView;
+
+
 
 
 }
