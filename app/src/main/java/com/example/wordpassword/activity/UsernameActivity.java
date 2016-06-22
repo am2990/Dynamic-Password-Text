@@ -99,7 +99,7 @@ public class UsernameActivity extends ActionBarActivity {
                     String location = Environment.getExternalStorageDirectory().getAbsolutePath() +
                             "/UserStudyFramework/"+
                             u+ "_"+timeStamp+
-                            "_num_sign_up.mp4";
+                            "_word_sign_up.mp4";
 
                     initRecorder(location);
 
@@ -124,7 +124,7 @@ public class UsernameActivity extends ActionBarActivity {
                     String location = Environment.getExternalStorageDirectory().getAbsolutePath() +
                             "/UserStudyFramework/"+
                             u+ "_"+timeStamp+
-                            "_num_sign_in.mp4";
+                            "_word_sign_in.mp4";
 
                     initRecorder(location);
 
