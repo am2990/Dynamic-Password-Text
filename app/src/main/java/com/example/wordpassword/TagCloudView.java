@@ -49,11 +49,14 @@ public class TagCloudView extends RelativeLayout {
 	DatabaseHelper db;
 	User user = new User();
 
+	private String userName;
+
 	Intent calleeIntent = null;
 
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected, Boolean signUp) {
 		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected, signUp); //default for min/max text size
 		System.out.println("usernameintag: " + str_usern);
+		userName = str_usern;
 		System.out.println("checkuserintag: "+ checkuser);
 		System.out.println("selected tagcloudview: " + selected);
 		System.out.println("nselected tagcloudview: "+ notSelected);
@@ -656,6 +659,7 @@ public class TagCloudView extends RelativeLayout {
 		else {
 			Toast.makeText(mContext, "Sign-in successful", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(mContext, FeedbackActivity.class);
+			intent.putExtra("USERNAME", userName);
 			mContext.startActivity(intent);
 		}
 
