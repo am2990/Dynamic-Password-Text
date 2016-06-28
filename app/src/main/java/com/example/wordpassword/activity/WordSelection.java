@@ -460,8 +460,9 @@ public class WordSelection extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(getBaseContext(), UsernameActivity.class);
-        startActivity(intent);
+        /*Intent intent = new Intent(getBaseContext(), UsernameActivity.class);
+        startActivity(intent);*/
+        Toast.makeText(WordSelection.this, "Please select your words", Toast.LENGTH_SHORT).show();
     }
 
     long startTime;

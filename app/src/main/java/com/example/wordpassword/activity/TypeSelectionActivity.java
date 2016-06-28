@@ -105,4 +105,9 @@ public class TypeSelectionActivity extends AppCompatActivity {
         super.onResume();
         startTime = Calendar.getInstance().getTimeInMillis();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

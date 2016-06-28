@@ -4,20 +4,12 @@ package com.example.wordpassword;
  * Google Summer of Code 2011
  * @authors Reza Shiftehfar, Sara Khosravinasr and Jorge Silva
  */
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
 
-import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,9 +17,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordpassword.activity.FeedbackActivity;
 import com.example.wordpassword.activity.UsernameActivity;
 import com.example.wordpassword.db.DatabaseHelper;
 import com.example.wordpassword.util.User;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
 
 public class TagCloudView extends RelativeLayout {
 
@@ -503,7 +501,7 @@ public class TagCloudView extends RelativeLayout {
 
 							if(signUp) {
 								// user is signing up
-
+								Log.v(TAG,"signup");
 								long timeSpent = Calendar.getInstance().getTimeInMillis() - SampleTagCloud.startTimeAtSampleTagCloud;
 								CSVeditor.shared().recordTimeStamp(timeSpent, 9);
 								long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
@@ -513,7 +511,7 @@ public class TagCloudView extends RelativeLayout {
 							}
 							else {
 								// user is signing in
-
+								Log.v(TAG,"signin");
 								long timeSpent = Calendar.getInstance().getTimeInMillis() - SampleTagCloud.startTimeAtSampleTagCloud;
 								CSVeditor.shared().recordTimeStamp(timeSpent, 9);
 								long totalTimeSpent = Calendar.getInstance().getTimeInMillis() - UsernameActivity.startTime;
@@ -538,7 +536,7 @@ public class TagCloudView extends RelativeLayout {
 								db.addUser(user);
 							}
 
-							callNextAct();
+							callNextAct(signUp);
 
 						}
 						else{
@@ -648,12 +646,22 @@ public class TagCloudView extends RelativeLayout {
 
 	}
 
-	private void callNextAct() {
+	private void callNextAct(Boolean signUp) {
+
+		if(signUp) {
+			Toast.makeText(mContext, "signup successful", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(mContext, UsernameActivity.class);
+			mContext.startActivity(intent);
+		}
+		else {
+			Toast.makeText(mContext, "Sign-in successful", Toast.LENGTH_SHORT).show();
+			Intent intent = new Intent(mContext, FeedbackActivity.class);
+			mContext.startActivity(intent);
+		}
+
 		// TODO Auto-generated method stub
 
-		Intent intent = new Intent(mContext, UsernameActivity.class);
-
-		mContext.startActivity(intent);
+		;
 	}
 
 	private final float TOUCH_SCALE_FACTOR = .8f;

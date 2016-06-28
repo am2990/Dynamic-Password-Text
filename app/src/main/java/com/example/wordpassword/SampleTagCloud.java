@@ -19,6 +19,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.example.wordpassword.activity.UsernameActivity;
 
 /**
  * SampleTagCloud class:
@@ -235,7 +238,9 @@ public class SampleTagCloud extends Activity {
 
 	private TagCloudView mTagCloudView;
 
-
-
-
+	@Override
+	public void onBackPressed() {
+		Log.v(TAG,"onBackPressed");
+		Toast.makeText(SampleTagCloud.this, "Please select words from cloud", Toast.LENGTH_SHORT).show();
+	}
 }
