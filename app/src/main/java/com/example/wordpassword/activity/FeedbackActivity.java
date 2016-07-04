@@ -17,11 +17,9 @@ import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.wordpassword.CSVeditor;
-import com.example.wordpassword.NotificationPublisher;
+import com.example.wordpassword.helper.CSVeditor;
+import com.example.wordpassword.helper.NotificationPublisher;
 import com.example.wordpassword.R;
-
-import java.util.Calendar;
 
 public class FeedbackActivity extends AppCompatActivity {
 
@@ -63,8 +61,9 @@ public class FeedbackActivity extends AppCompatActivity {
                         " understand: "+understand+" remember: "+remember);
 
                 CSVeditor.shared().insertFeedback(rating, memoryBurden, understand, remember);
+                CSVeditor.shared().recordTimeStamp(InstructionsActivity.endTime, 15);
 
-                scheduleNotification(getNotification("Its time to login using "+userName), 10000);
+                scheduleNotification(getNotification("Its time to login using "+userName), AlarmManager.INTERVAL_DAY);
 
                 submitPressed = true;
 
@@ -86,7 +85,7 @@ public class FeedbackActivity extends AppCompatActivity {
         }
     }
 
-    private void scheduleNotification(Notification notification, int delay) {
+    private void scheduleNotification(Notification notification, long delay) {
 
         Intent notificationIntent = new Intent(this, NotificationPublisher.class);
         notificationIntent.putExtra(NotificationPublisher.NOTIFICATION_ID, 1);
@@ -115,7 +114,7 @@ public class FeedbackActivity extends AppCompatActivity {
         builder.setAutoCancel(true);
         builder.setDefaults(Notification.DEFAULT_ALL);
         builder.setContentText(content);
-        builder.setSmallIcon(R.drawable.ic_launcher);
+        builder.setSmallIcon(R.mipmap.ic_launcher);
 
         return builder.build();
     }

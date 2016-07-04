@@ -1,4 +1,4 @@
-package com.example.wordpassword;
+package com.example.wordpassword.activity;
 /**
  * Komodo Lab: Tagin! Project: 3D Tag Cloud
  * Google Summer of Code 2011

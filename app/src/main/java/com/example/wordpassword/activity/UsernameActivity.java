@@ -23,11 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.wordpassword.CSVeditor;
-import com.example.wordpassword.MainActivity;
+import com.example.wordpassword.helper.CSVeditor;
 import com.example.wordpassword.R;
-import com.example.wordpassword.SampleTagCloud;
-import com.example.wordpassword.db.DatabaseHelper;
+import com.example.wordpassword.helper.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
 import java.io.IOException;
@@ -78,6 +76,8 @@ public class UsernameActivity extends ActionBarActivity {
 
         username = (EditText) findViewById(R.id.username);
         bcontinue = (Button) findViewById(R.id.bcontinue);
+
+        username.requestFocus();
 
         db = new DatabaseHelper(this);
 

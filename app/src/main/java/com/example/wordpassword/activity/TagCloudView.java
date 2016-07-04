@@ -1,4 +1,4 @@
-package com.example.wordpassword;
+package com.example.wordpassword.activity;
 /**
  * Komodo Lab: Tagin! Project: 3D Tag Cloud
  * Google Summer of Code 2011
@@ -17,9 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wordpassword.activity.FeedbackActivity;
-import com.example.wordpassword.activity.UsernameActivity;
-import com.example.wordpassword.db.DatabaseHelper;
+import com.example.wordpassword.helper.CSVeditor;
+import com.example.wordpassword.helper.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
 import java.util.ArrayList;

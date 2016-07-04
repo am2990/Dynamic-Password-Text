@@ -19,15 +19,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wordpassword.CSVeditor;
+import com.example.wordpassword.helper.CSVeditor;
 import com.example.wordpassword.R;
-import com.example.wordpassword.SampleTagCloud;
 import com.example.wordpassword.util.Constants;
 import com.example.wordpassword.util.WordModel;
 
@@ -43,7 +41,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 

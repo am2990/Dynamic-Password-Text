@@ -1,4 +1,4 @@
-package com.example.wordpassword;
+package com.example.wordpassword.helper;
 
 import android.app.Notification;
 import android.app.NotificationManager;

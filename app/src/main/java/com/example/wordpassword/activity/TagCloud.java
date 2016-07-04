@@ -1,4 +1,4 @@
-package com.example.wordpassword;
+package com.example.wordpassword.activity;
 /**
  * Komodo Lab: Tagin! Project: 3D Tag Cloud
  * Google Summer of Code 2011
@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import android.graphics.Paint;
 
 public class TagCloud implements Iterable{
 

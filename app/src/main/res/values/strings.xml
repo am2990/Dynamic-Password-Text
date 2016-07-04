@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">WordPassword</string>
+    <string name="app_name">Pass Word</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_instructions">Instructions</string>
     <string name="title_activity_type_selection">Selection Password Type</string>
     <string name="username" />
+
     <!--Password Type Selection Activity-->
     <string name="syn">Synonyms</string>
     <string name="ant">Antonyms</string>
@@ -15,14 +16,14 @@
     <string name="title_activity_username">UsernameActivity</string>
     
     <string name="instuctions">1. Use any username for signup process in main page
-        \n2. Enter any formula that you can remember according to your ease or select from given examples
-        \n3. Put the given numbers in your formula and click check to first check the formula
-        and then press confirm to make it the password for the entered username
-        \n4. Use back to return to the main page
-        \n5. Now using the username you created login in the main page.
-        \n6. Now substitute the values to your equation and click submit
-        \n7. If correct then you will be directed to a welcome page otherwise you have 4 chances to get your answer write
-        \n8. If you cannot login then make another username and try again.</string>
+        \n2. Enter any statement you can remember or select from any predefined statements
+        \n3. Select password type in next activity (from synonyms, antonyms or similar words)
+        \n4. Select password words for each word in statement from the checklist or
+        add your own custom word by using + button on lower side of the screen
+        \n5. Hit next to go to next word and repeat for all the words asked.
+        \n6. Select correct words from the word cloud to confirm your password.
+        \n7. Enter your username to login
+        \n8. Select from the word cloud your password.</string>
 
     <string name="spn_memory_burden">Memory Burden</string>
     <string-array name="arr_memory_burden">
@@ -42,6 +43,5 @@
         <item>Easy</item>
         <item>Difficult</item>
     </string-array>
-
 
 </resources>

@@ -1,29 +1,16 @@
-package com.example.wordpassword;
+package com.example.wordpassword.activity;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 import android.content.Context;
-import android.support.v7.app.ActionBarActivity;
-import android.text.method.LinkMovementMethod;
 import android.app.Activity;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ContextWrapper;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,8 +18,8 @@ import android.widget.TextView;
 import android.widget.TextView.BufferType;
 import android.widget.Toast;
 
-import com.example.wordpassword.activity.TypeSelectionActivity;
-import com.example.wordpassword.activity.UsernameActivity;
+import com.example.wordpassword.R;
+import com.example.wordpassword.helper.CSVeditor;
 
 
 public class MainActivity extends Activity{

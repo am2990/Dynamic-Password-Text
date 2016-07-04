@@ -1,4 +1,4 @@
-package com.example.wordpassword.db;
+package com.example.wordpassword.helper;
 
 /**
  * Created by apurv on 12/24/2015.
