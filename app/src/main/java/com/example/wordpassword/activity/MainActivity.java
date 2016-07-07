@@ -10,6 +10,8 @@ import android.content.Context;
 import android.app.Activity;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -139,21 +141,24 @@ public class MainActivity extends Activity{
 				}
 
 				// Object class does not implement Serializable interface
-
-				Bundle extra = new Bundle();
-				extra.putSerializable("wordArrayList", wordsList);
+if (isNetworkAvailable()) {
+	Bundle extra = new Bundle();
+	extra.putSerializable("wordArrayList", wordsList);
 
 //			     Intent intent = new Intent(getBaseContext(), SampleTagCloud.class);
-				Intent intent = new Intent(getBaseContext(), TypeSelectionActivity.class);
-				intent.putExtra("extra", extra);
-				intent.putExtra("usern",str_usern);
-				intent.putExtra("checkuser", checkuser);
+	Intent intent = new Intent(getBaseContext(), TypeSelectionActivity.class);
+	intent.putExtra("extra", extra);
+	intent.putExtra("usern", str_usern);
+	intent.putExtra("checkuser", checkuser);
 
-				long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
-				CSVeditor.shared().recordTimeStamp(spentTime,6);
+	long spentTime = Calendar.getInstance().getTimeInMillis() - startTime;
+	CSVeditor.shared().recordTimeStamp(spentTime, 6);
 
-				startActivity(intent);
-
+	startActivity(intent);
+}
+				else{
+	Toast.makeText(MainActivity.this, "Please check internet connection", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 		/*	private void stopwords(ArrayList<Object> wordArrayList) {
@@ -236,6 +241,12 @@ public class MainActivity extends Activity{
 			}
 		});
 
+	}
+	private boolean isNetworkAvailable() {
+		ConnectivityManager connectivityManager
+				= (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+		return activeNetworkInfo != null && activeNetworkInfo.isConnected();
 	}
 
 	long startTime;
