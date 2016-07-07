@@ -66,6 +66,7 @@ public class TagCloud implements Iterable{
 			tempTag.setColorG(tempColor[1]);
 			tempTag.setColorB(tempColor[2]);
 			tempTag.setTextSize(tempTextSize);
+			tempTag.setSelect(false);
 		}		
 		
 		this.size= tagCloud.size();
@@ -97,7 +98,8 @@ public class TagCloud implements Iterable{
 		position(distrEven, newTag);
 		//now add the new tag to the tagCloud
 		tagCloud.add(newTag);
-		this.size= tagCloud.size();				
+		this.size= tagCloud.size();
+
 		updateAll();		
 	}
 	

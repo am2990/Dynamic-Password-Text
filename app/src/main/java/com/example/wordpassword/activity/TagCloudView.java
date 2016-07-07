@@ -21,6 +21,8 @@ import com.example.wordpassword.helper.CSVeditor;
 import com.example.wordpassword.helper.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
+import org.apache.poi.util.SystemOutLogger;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -459,6 +461,8 @@ public class TagCloudView extends RelativeLayout {
 					// for(int i=0;i<length; i++){
 					System.out.println("temp value"+ temp);
 					boolean setval = tempTag.isSelected();
+					System.out.println("setval:" + setval);
+
 					if (tempTag.isSelected()){
 						selectionCount++;
 						if(objects.contains(temp)){
@@ -634,6 +638,7 @@ public class TagCloudView extends RelativeLayout {
 				catch(Exception e){
 					Toast.makeText(mContext,"WRONG SELECTION !!", Toast.LENGTH_SHORT).show();
 					System.out.println(e);
+
 					Log.v(TAG,"exception wrong selection");
 				}
 

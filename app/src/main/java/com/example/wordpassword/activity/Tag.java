@@ -1,4 +1,7 @@
 package com.example.wordpassword.activity;
+
+import org.apache.poi.util.SystemOutLogger;
+
 /**
  * Komodo Lab: Tagin! Project: 3D Tag Cloud
  * Google Summer of Code 2011
@@ -145,16 +148,21 @@ public class Tag implements Comparable<Tag>{
 		this.url = url;
 	}
 	
-	public void setSelect(){
-		this.set = true;
+	public void setSelect(boolean setValue){
+
+
+		this.set = setValue;
+		System.out.println("set: "+ set);
 	}
 	
 	public boolean getSelect(){
+		System.out.println("set: "+ set);
 		return set;
+
 	}
 	
 	public void toggle() {
-		
+
 		if(set){
 			setColorR(150);setColorB(157);setColorG(200);
 			this.set = false;
