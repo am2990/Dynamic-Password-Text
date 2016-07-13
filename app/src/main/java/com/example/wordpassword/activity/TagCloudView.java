@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -41,6 +42,7 @@ public class TagCloudView extends RelativeLayout {
 	TextView mTextView1;
 	int count = 0;
 	int count1=0;
+	int count_wrong =1;
 	String vv ="";
 	String temp="";
 	String ss ="";
@@ -490,13 +492,28 @@ public class TagCloudView extends RelativeLayout {
 								UsernameActivity.stopScreenSharing();
 								CSVeditor.shared().setSuccessLogin(false);
 							}
+if(count_wrong < 3) {
+	count_wrong++;
+	Toast.makeText(mContext, "wrong selection !!", Toast.LENGTH_SHORT).show();
+	Log.v(TAG, "selectionCount > length");
+	selectionCount = 0;
+	count1 = 0;
+	flag1 = true;
+	reset();
+}
+							else{
 
-							Toast.makeText(mContext,"wrong selection !!", Toast.LENGTH_SHORT).show();
-							Log.v(TAG,"selectionCount > length");
-							selectionCount = 0;
-							count1 = 0;
-							flag1 = true;
-							reset();
+	Toast.makeText(mContext, "SignUp again", Toast.LENGTH_LONG).show();
+	Intent intent = new Intent(mContext, UsernameActivity.class);
+	//intent.putExtra("USERNAME", userName);
+	Bundle extra = new Bundle();
+	extra.putSerializable("selectedWordArrayList", selected);
+	extra.putSerializable("notSelectedWordArrayList", notSelected);
+	intent.putExtra("extra", extra);
+	 intent.putExtra("usern",str_usern);
+                intent.putExtra("checkuser", checkuser);
+	mContext.startActivity(intent);
+							}
 						}
 
 						if(flag1== false){
