@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -36,7 +37,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-public class UsernameActivity extends ActionBarActivity {
+public class UsernameActivity extends AppCompatActivity {
 
     private static final String TAG = UsernameActivity.class.getSimpleName();
 
@@ -110,7 +111,7 @@ public class UsernameActivity extends ActionBarActivity {
 
                     CSVeditor.shared().insertNewUser(u,u+"_"+timeStamp+"_word_sign_up.mp4",timeSpent);
 
-                    Toast.makeText(UsernameActivity.this, "started", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UsernameActivity.this, "Sign up", Toast.LENGTH_SHORT).show();
                     shareScreen();
 
                     checkuser = "false";
@@ -147,10 +148,10 @@ public class UsernameActivity extends ActionBarActivity {
 
                     System.out.println("hhh: " + str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1));
 
-                    ArrayList<String> selected = new ArrayList<String>(Arrays.asList(str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1).split(",")));
+                    ArrayList<String> selected = new ArrayList<>(Arrays.asList(str_selected.substring(indexOfOpenBracket1 + 1, indexOfLastBracket1).split(",")));
                     System.out.println("selected al:" + selected);
 
-                    ArrayList<String> notSelected = new ArrayList<String>(Arrays.asList(str_notSelected.substring(indexOfOpenBracket2 + 1, indexOfLastBracket2).split(",")));
+                    ArrayList<String> notSelected = new ArrayList<>(Arrays.asList(str_notSelected.substring(indexOfOpenBracket2 + 1, indexOfLastBracket2).split(",")));
                     System.out.println("selected username: " + selected);
                     Intent intent = new Intent();
                     intent.setClass(UsernameActivity.this, SampleTagCloud.class);
@@ -192,7 +193,6 @@ public class UsernameActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_instructions:
-                Toast.makeText(UsernameActivity.this, "instructions", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(UsernameActivity.this, InstructionsActivity.class);
                 startActivity(intent);
                 return true;
@@ -213,19 +213,13 @@ public class UsernameActivity extends ActionBarActivity {
 
         if(mediaProjection == null) {
             startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(), REQUEST_CODE);
-            return;
         }
     }
 
     private class MediaProjectionCallback extends MediaProjection.Callback {
         @Override
         public void onStop() {
-            if(false) {
-                //toggleButton.setChecked(false);
-                mediaRecorder.stop();
-                mediaRecorder.reset();
-                Log.v(TAG,"Recording Stopped");
-            }
+            Log.v(TAG, "Recording Stopped");
         }
     }
 
@@ -253,12 +247,6 @@ public class UsernameActivity extends ActionBarActivity {
     }
 
     private VirtualDisplay createVirtualDisplay() {
-        if(mediaProjection == null) {
-            Log.v(TAG,"null");
-        }
-        else
-            Log.v(TAG,"not null");
-
         return mediaProjection.createVirtualDisplay("UsernameActivity",
                 DISPLAY_WIDTH, DISPLAY_HEIGHT, screenDensity,
                 DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,

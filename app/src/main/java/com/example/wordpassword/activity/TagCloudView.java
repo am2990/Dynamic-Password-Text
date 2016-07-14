@@ -22,8 +22,6 @@ import com.example.wordpassword.helper.CSVeditor;
 import com.example.wordpassword.helper.DatabaseHelper;
 import com.example.wordpassword.util.User;
 
-import org.apache.poi.util.SystemOutLogger;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -35,19 +33,10 @@ public class TagCloudView extends RelativeLayout {
 
 	private Boolean signUp = false;
 
-	private long endSignUpTime;
-	private long endLoginTime;
-
-	RelativeLayout navigation_bar;
-	TextView mTextView1;
-	int count = 0;
 	int count1=0;
 	int count_wrong =1;
-	String vv ="";
 	String temp="";
-	String ss ="";
-	Object[] arr=new Object[100];
-	Object[] array=new Object[100];
+
 	boolean flag1=true;
 	DatabaseHelper db;
 	User user = new User();
@@ -58,11 +47,7 @@ public class TagCloudView extends RelativeLayout {
 
 	public TagCloudView(Context mContext, int width, int height, List<Tag> tagList, ArrayList<String> objects, String checkuser, String str_usern, ArrayList<String> selected, ArrayList<String> notSelected, Boolean signUp) {
 		this(mContext, width, height, tagList, 20 , 34, 1, objects, checkuser, str_usern, selected, notSelected, signUp); //default for min/max text size
-		System.out.println("usernameintag: " + str_usern);
 		userName = str_usern;
-		System.out.println("checkuserintag: "+ checkuser);
-		System.out.println("selected tagcloudview: " + selected);
-		System.out.println("nselected tagcloudview: "+ notSelected);
 		db = new DatabaseHelper(mContext);
 
 	}
@@ -71,8 +56,6 @@ public class TagCloudView extends RelativeLayout {
 
 		super(mContext);
 		this.signUp = signUp;
-
-		Log.v(TAG,"signUp: "+signUp);
 
 		this.mContext= mContext;
 		this.textSizeMin = textSizeMin;
@@ -113,8 +96,9 @@ public class TagCloudView extends RelativeLayout {
 		mTagCloud.setAngleY(mAngleY);
 		mTagCloud.update();
 
-		mTextView = new ArrayList<TextView>();
-		mParams = new ArrayList<RelativeLayout.LayoutParams>();
+		mTextView = new ArrayList<>();
+
+		mParams = new ArrayList<>();
 		//Now Draw the 3D objects: for all the tags in the TagCloud
 		Iterator<?> it=mTagCloud.iterator();
 		Tag tempTag;
@@ -320,22 +304,10 @@ public class TagCloudView extends RelativeLayout {
 				}
 
 				break;
-			/*case MotionEvent.ACTION_UP:  //now it is clicked!!!!		
-			dx = x - centerX;
-			dy = y - centerY;			
-			break;*/
 		}
 
 		return true;
 	}
-	/*String urlMaker(String url){
-		if 	(	(url.substring(0,7).equalsIgnoreCase("http://")) 	|| 
-				(url.substring(0,8).equalsIgnoreCase("https://"))
-			)
-			return url;
-		else
-			return "http://"+url;
-	}*/
 
 	String urlMaker(String url){
 
@@ -352,17 +324,13 @@ public class TagCloudView extends RelativeLayout {
 
 		}
 
-
-
-
-
 	}
 
 	//the filter function makes sure that there all elements are having unique Text field:
 	List<Tag> Filter(List<Tag> tagList){
 		//current implementation is O(n^2) but since the number of tags are not that many,
 		//it is acceptable.
-		List<Tag> tempTagList=new ArrayList<Tag>();
+		List<Tag> tempTagList= new ArrayList<>();
 		Iterator<Tag> itr = tagList.iterator();
 		Iterator<Tag> itrInternal;
 		Tag tempTag1, tempTag2;
@@ -387,7 +355,7 @@ public class TagCloudView extends RelativeLayout {
 
 
 			}
-			if (found==false)
+			if (!found)
 				tempTagList.add(tempTag1);
 
 		}
@@ -395,6 +363,7 @@ public class TagCloudView extends RelativeLayout {
 	}
 
 	int selectionCount = 0;
+
 	//for handling the click on the tags
 	//onclick open the tag url in a new window. Back button will bring you back to TagCloud
 	View.OnClickListener OnTagClickListener(final String url,final ArrayList<String> objects, final String checkuser, final String str_usern, final ArrayList<String> selected, final ArrayList<String> notSelected){
@@ -402,43 +371,7 @@ public class TagCloudView extends RelativeLayout {
 			@Override
 			public void onClick(View v) {
 
-				//	System.out.println("hello");
-				/*List<String> myList = new ArrayList<String>();
-				myList.add(url);
-				myList.toArray();
-				String st = null
-				System.out.println("MyList: "+myList.toArray());	*/
-				//System.out.println("url length"+url.length());
-
 				temp=url;
-			/*	if(url!=""){
-
-					count++;
-					System.out.println("url length"+count);
-				}*/
-				//int p = 0;
-				/*if(p < count){
-					//String temp="";
-					temp=url;
-					System.out.println("for temp"+temp);
-					arr[p]=temp;
-					System.out.println(arr[p]);
-					p++;
-				}*/
-
-
-
-
-				//}
-
-
-
-				/*	if(url!=""){
-				for(int ii=0;ii<=count;ii++){
-					arr[ii]=url;
-					System.out.println("array url"+arr[ii]);
-				}
-			}*/
 				try{
 
 					Uri uri = Uri.parse(urlMaker(url));
@@ -448,22 +381,11 @@ public class TagCloudView extends RelativeLayout {
 					Tag tempTag = mTagCloud.getTag(uri.toString());
 					tempTag.toggle();
 
-
-//					System.out.println("temptag false-"+ tempTag.getText());
-//					tempTag.setColorR(56);tempTag.setColorB(70);tempTag.setColorG(239);
-//					mTagCloud.Replace(tempTag, uri.toString().trim());
-					//				
 					mTagCloud.update();
 
-//					System.out.println("false");
-					System.out.println(objects);
-					System.out.println("flag"+ flag1);
 					int length=objects.size();
-					System.out.println("length"+length);
-					// for(int i=0;i<length; i++){
-					System.out.println("temp value"+ temp);
+
 					boolean setval = tempTag.isSelected();
-					System.out.println("setval:" + setval);
 
 					if (tempTag.isSelected()){
 						selectionCount++;
@@ -472,12 +394,10 @@ public class TagCloudView extends RelativeLayout {
 
 							if(count1 < length){
 								flag1=true;
-								System.out.println("true" + flag1);
 							}
 							else if(count1==length && selectionCount == count1){
 								System.out.println("no need");
 								flag1=false;
-								System.out.println("false : "+ flag1);
 							}
 						}
 						else if( selectionCount > length){
@@ -492,34 +412,31 @@ public class TagCloudView extends RelativeLayout {
 								UsernameActivity.stopScreenSharing();
 								CSVeditor.shared().setSuccessLogin(false);
 							}
-if(count_wrong < 3) {
-	count_wrong++;
-	Toast.makeText(mContext, "wrong selection !!", Toast.LENGTH_SHORT).show();
-	Log.v(TAG, "selectionCount > length");
-	selectionCount = 0;
-	count1 = 0;
-	flag1 = true;
-	reset();
-}
+							if(count_wrong < 3) {
+								count_wrong++;
+								Toast.makeText(mContext, "wrong selection !!", Toast.LENGTH_SHORT).show();
+								Log.v(TAG, "selectionCount > length");
+								selectionCount = 0;
+								count1 = 0;
+								flag1 = true;
+								reset();
+							}
 							else{
 
-	Toast.makeText(mContext, "SignUp again", Toast.LENGTH_LONG).show();
-	Intent intent = new Intent(mContext, UsernameActivity.class);
-	//intent.putExtra("USERNAME", userName);
-	Bundle extra = new Bundle();
-	extra.putSerializable("selectedWordArrayList", selected);
-	extra.putSerializable("notSelectedWordArrayList", notSelected);
-	intent.putExtra("extra", extra);
-	 intent.putExtra("usern",str_usern);
-                intent.putExtra("checkuser", checkuser);
-	mContext.startActivity(intent);
+								Toast.makeText(mContext, "SignUp again", Toast.LENGTH_LONG).show();
+								Intent intent = new Intent(mContext, UsernameActivity.class);
+								//intent.putExtra("USERNAME", userName);
+								Bundle extra = new Bundle();
+								extra.putSerializable("selectedWordArrayList", selected);
+								extra.putSerializable("notSelectedWordArrayList", notSelected);
+								intent.putExtra("extra", extra);
+								intent.putExtra("usern",str_usern);
+								intent.putExtra("checkuser", checkuser);
+								mContext.startActivity(intent);
 							}
 						}
 
-						if(flag1== false){
-
-
-							System.out.println("ok");
+						if(!flag1){
 							Toast.makeText(mContext, "Correct Password !!", Toast.LENGTH_LONG).show();
 
 							if(signUp) {
@@ -545,10 +462,6 @@ if(count_wrong < 3) {
 								UsernameActivity.stopScreenSharing();
 							}
 
-						/*Intent intent = new Intent(mContext, NextActivity.class);
-						 intent.putExtra("aaa", "extra");
-						 startActivity(intent);*/
-
 							if(checkuser.equalsIgnoreCase("false")){
 
 								user.setUsername(str_usern);
@@ -572,102 +485,17 @@ if(count_wrong < 3) {
 						selectionCount--;
 
 						if(objects.contains(temp)){
-
-
 							count1--;
-
-
-
-						/*	if(count1 < length){
-								flag1=true;
-								System.out.println("true"+ flag1);
-							}
-							else if(count==length){
-								System.out.println("no need");
-								flag1=false;
-								System.out.println("false : "+ flag1);
-							}
-						} 
-
-						if(flag1== false){
-
-
-							System.out.println("not ok");*/
-
-
 						}
 						System.out.println("unselected count1: " + count1 +"," + selectionCount);
 					}
-					//ArrayList<Object>=new ArrayList<Object>;
-					//Iterator<Object> itr = objects.iterator();
-
-					/*for(int i=0;i<length; i++)
-				{
-				    if(itr.next()==arr[i]);
-				    {
-				        count1++;
-				    }
-				}
-				if(count1 == length)
-				{
-				    System.out.println("Both are equal");
-				}
-				else
-				{
-				    System.out.println("Both are not equal");
-				}*/
-					//array=	objects.toArray();
-					//System.out.println("array's array: "+array.toString());
-
-
-					/*	if(p==(count-1)){
-				array=	(String[])objects.toArray();
-				System.out.println(array);
-					if(Arrays.equals(array, arr)){
-						System.out.println("u r right");
-					}
-					else{
-						System.out.println("wrong password");
-					}
-				}
-				else{
-					System.out.println("more to select");
-				}*/
-					/*ArrayList<String> myList = new ArrayList<String>();
-				//Iterator<Tag> itt = myList.iterator();
-				String hh="";
-			//	while(itt.hasNext()){
-				//String ui =tempTag.toString();
-			//	System.out.println("value of ui"+ ui);
-				//while(uri.toString()!= ""){
-						myList.add(i);
-						//myList.toArray();
-						//System.out.println("yo yo honey singh"+ myList.toArray());
-						for (Objects s : myList)
-						{
-
-						    hh += s + "\t";
-						}
-
-				//}
-				*/
 				}
 				catch(Exception e){
 					Toast.makeText(mContext,"WRONG SELECTION !!", Toast.LENGTH_SHORT).show();
-					System.out.println(e);
-
 					Log.v(TAG,"exception wrong selection");
 				}
-
-
-
 			}
-
-
 		};
-
-
-
 	}
 
 	private void callNextAct(Boolean signUp) {
@@ -683,10 +511,6 @@ if(count_wrong < 3) {
 			intent.putExtra("USERNAME", userName);
 			mContext.startActivity(intent);
 		}
-
-		// TODO Auto-generated method stub
-
-		;
 	}
 
 	private final float TOUCH_SCALE_FACTOR = .8f;
@@ -702,6 +526,4 @@ if(count_wrong < 3) {
 	private List<TextView> mTextView;
 	private List<RelativeLayout.LayoutParams> mParams;
 	private int shiftLeft;
-
-
 }

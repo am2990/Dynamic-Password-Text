@@ -229,7 +229,7 @@ public class CSVeditor {
 
     public void recordTimeStamp(long timeSpent, int columnIndex) {
         Cell cell;
-        cell = sheet.getRow(currentRow).getCell(columnIndex);
+        cell = sheet.getRow(currentRow+1).getCell(columnIndex);
         cell.setCellValue(timeSpent);
         writeToWorkbook();
     }
